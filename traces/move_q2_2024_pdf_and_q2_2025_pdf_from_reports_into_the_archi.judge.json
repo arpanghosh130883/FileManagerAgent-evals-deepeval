@@ -1,0 +1,347 @@
+{
+  "name": "file_manager_agent",
+  "type": "base",
+  "integration": "LangChain",
+  "input": {
+    "task": "Move q2_2024.pdf and q2_2025.pdf from reports into the archive folder",
+    "past_steps": []
+  },
+  "output": {
+    "task": "Move q2_2024.pdf and q2_2025.pdf from reports into the archive folder",
+    "plan": [
+      "Call move_file with source='reports/q2_2024.pdf' and destination='archive'",
+      "Call move_file with source='reports/q2_2025.pdf' and destination='archive'"
+    ],
+    "past_steps": [
+      [
+        "Call move_file with source='reports/q2_2024.pdf' and destination='archive'",
+        "The file `q2_2024.pdf` has been moved from the `reports` folder to the `archive` folder."
+      ],
+      [
+        "Call move_file with source='reports/q2_2025.pdf' and destination='archive'",
+        "The file `q2_2025.pdf` was not found in the `reports` folder."
+      ]
+    ],
+    "response": "The file `q2_2024.pdf` has been successfully moved to the `archive` folder, but `q2_2025.pdf` was not found in the `reports` folder."
+  },
+  "children": [
+    {
+      "name": "planner",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "plan": [
+          "Call move_file with source='reports/q2_2024.pdf' and destination='archive'",
+          "Call move_file with source='reports/q2_2025.pdf' and destination='archive'"
+        ]
+      },
+      "children": [
+        {
+          "name": "RunnableSequence",
+          "type": "base",
+          "integration": "LangChain",
+          "children": [
+            {
+              "name": "ChatOpenAI",
+              "type": "llm",
+              "integration": "LangChain",
+              "model": "gpt-4o-mini-2024-07-18",
+              "provider": "openai",
+              "input_token_count": 497.0,
+              "output_token_count": 44.0,
+              "output": {
+                "role": "AI",
+                "content": "{\"steps\":[\"Call move_file with source='reports/q2_2024.pdf' and destination='archive'\",\"Call move_file with source='reports/q2_2025.pdf' and destination='archive'\"]}",
+                "tool_calls": []
+              },
+              "children": []
+            },
+            {
+              "name": "RunnableLambda",
+              "type": "base",
+              "integration": "LangChain",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "executor",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "past_steps": [
+          [
+            "Call move_file with source='reports/q2_2024.pdf' and destination='archive'",
+            "The file `q2_2024.pdf` has been moved from the `reports` folder to the `archive` folder."
+          ]
+        ]
+      },
+      "children": [
+        {
+          "name": "step_executor",
+          "type": "base",
+          "integration": "LangChain",
+          "children": [
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 365.0,
+                  "output_token_count": 24.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "",
+                    "tool_calls": [
+                      {
+                        "name": "move_file",
+                        "args": {
+                          "source": "reports/q2_2024.pdf",
+                          "destination": "archive"
+                        },
+                        "id": "call_nTRUQBw0gua5E2IJ0MFyJXqZ"
+                      }
+                    ]
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "tools",
+              "type": "base",
+              "integration": "LangChain",
+              "tools_called": [
+                {
+                  "name": "move_file",
+                  "type": "FUNCTION",
+                  "description": null,
+                  "reasoning": null,
+                  "output": {
+                    "content": "Moved reports/q2_2024.pdf -> archive/q2_2024.pdf",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "move_file",
+                    "id": "bb5ffc15-2de4-4346-a087-96dedc0cdc2f",
+                    "tool_call_id": "call_nTRUQBw0gua5E2IJ0MFyJXqZ",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "input_parameters": {
+                    "source": "reports/q2_2024.pdf",
+                    "destination": "archive"
+                  }
+                }
+              ],
+              "children": [
+                {
+                  "name": "move_file",
+                  "type": "tool",
+                  "integration": "LangChain",
+                  "input": {
+                    "source": "reports/q2_2024.pdf",
+                    "destination": "archive"
+                  },
+                  "output": {
+                    "content": "Moved reports/q2_2024.pdf -> archive/q2_2024.pdf",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "move_file",
+                    "id": "bb5ffc15-2de4-4346-a087-96dedc0cdc2f",
+                    "tool_call_id": "call_nTRUQBw0gua5E2IJ0MFyJXqZ",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 416.0,
+                  "output_token_count": 27.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "The file `q2_2024.pdf` has been moved from the `reports` folder to the `archive` folder.",
+                    "tool_calls": []
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "executor",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "past_steps": [
+          [
+            "Call move_file with source='reports/q2_2025.pdf' and destination='archive'",
+            "The file `q2_2025.pdf` was not found in the `reports` folder."
+          ]
+        ]
+      },
+      "children": [
+        {
+          "name": "step_executor",
+          "type": "base",
+          "integration": "LangChain",
+          "children": [
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 409.0,
+                  "output_token_count": 24.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "",
+                    "tool_calls": [
+                      {
+                        "name": "move_file",
+                        "args": {
+                          "source": "reports/q2_2025.pdf",
+                          "destination": "archive"
+                        },
+                        "id": "call_qdtvoUlJmxmdJPIC1jDqKsjH"
+                      }
+                    ]
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "tools",
+              "type": "base",
+              "integration": "LangChain",
+              "tools_called": [
+                {
+                  "name": "move_file",
+                  "type": "FUNCTION",
+                  "description": null,
+                  "reasoning": null,
+                  "output": {
+                    "content": "Error: 'reports/q2_2025.pdf' not found",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "move_file",
+                    "id": "d43efe52-3e92-4368-b43c-4ef4a9e132d8",
+                    "tool_call_id": "call_qdtvoUlJmxmdJPIC1jDqKsjH",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "input_parameters": {
+                    "source": "reports/q2_2025.pdf",
+                    "destination": "archive"
+                  }
+                }
+              ],
+              "children": [
+                {
+                  "name": "move_file",
+                  "type": "tool",
+                  "integration": "LangChain",
+                  "input": {
+                    "source": "reports/q2_2025.pdf",
+                    "destination": "archive"
+                  },
+                  "output": {
+                    "content": "Error: 'reports/q2_2025.pdf' not found",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "move_file",
+                    "id": "d43efe52-3e92-4368-b43c-4ef4a9e132d8",
+                    "tool_call_id": "call_qdtvoUlJmxmdJPIC1jDqKsjH",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 457.0,
+                  "output_token_count": 21.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "The file `q2_2025.pdf` was not found in the `reports` folder.",
+                    "tool_calls": []
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "responder",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "response": "The file `q2_2024.pdf` has been successfully moved to the `archive` folder, but `q2_2025.pdf` was not found in the `reports` folder."
+      },
+      "children": [
+        {
+          "name": "ChatOpenAI",
+          "type": "llm",
+          "integration": "LangChain",
+          "model": "gpt-4o-mini-2024-07-18",
+          "provider": "openai",
+          "input_token_count": 175.0,
+          "output_token_count": 40.0,
+          "output": {
+            "role": "AI",
+            "content": "The file `q2_2024.pdf` has been successfully moved to the `archive` folder, but `q2_2025.pdf` was not found in the `reports` folder.",
+            "tool_calls": []
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

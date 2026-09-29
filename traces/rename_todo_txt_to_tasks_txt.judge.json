@@ -1,0 +1,215 @@
+{
+  "name": "file_manager_agent",
+  "type": "base",
+  "integration": "LangChain",
+  "input": {
+    "task": "Rename todo.txt to tasks.txt",
+    "past_steps": []
+  },
+  "output": {
+    "task": "Rename todo.txt to tasks.txt",
+    "plan": [
+      "Call move_file with source='todo.txt' and destination='tasks.txt'"
+    ],
+    "past_steps": [
+      [
+        "Call move_file with source='todo.txt' and destination='tasks.txt'",
+        "The file has been successfully renamed from `todo.txt` to `tasks.txt`."
+      ]
+    ],
+    "response": "The file has been successfully renamed from `todo.txt` to `tasks.txt`."
+  },
+  "children": [
+    {
+      "name": "planner",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "plan": [
+          "Call move_file with source='todo.txt' and destination='tasks.txt'"
+        ]
+      },
+      "children": [
+        {
+          "name": "RunnableSequence",
+          "type": "base",
+          "integration": "LangChain",
+          "children": [
+            {
+              "name": "ChatOpenAI",
+              "type": "llm",
+              "integration": "LangChain",
+              "model": "gpt-4o-mini-2024-07-18",
+              "provider": "openai",
+              "input_token_count": 483.0,
+              "output_token_count": 20.0,
+              "output": {
+                "role": "AI",
+                "content": "{\"steps\":[\"Call move_file with source='todo.txt' and destination='tasks.txt'\"]}",
+                "tool_calls": []
+              },
+              "children": []
+            },
+            {
+              "name": "RunnableLambda",
+              "type": "base",
+              "integration": "LangChain",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "executor",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "past_steps": [
+          [
+            "Call move_file with source='todo.txt' and destination='tasks.txt'",
+            "The file has been successfully renamed from `todo.txt` to `tasks.txt`."
+          ]
+        ]
+      },
+      "children": [
+        {
+          "name": "step_executor",
+          "type": "base",
+          "integration": "LangChain",
+          "children": [
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 322.0,
+                  "output_token_count": 20.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "",
+                    "tool_calls": [
+                      {
+                        "name": "move_file",
+                        "args": {
+                          "source": "todo.txt",
+                          "destination": "tasks.txt"
+                        },
+                        "id": "call_qrETPjxCGGvOqJr5eP26OVEb"
+                      }
+                    ]
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "tools",
+              "type": "base",
+              "integration": "LangChain",
+              "tools_called": [
+                {
+                  "name": "move_file",
+                  "type": "FUNCTION",
+                  "description": null,
+                  "reasoning": null,
+                  "output": {
+                    "content": "Moved todo.txt -> tasks.txt",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "move_file",
+                    "id": "3fa1bf3b-a8e7-4230-ab9c-7fc74ee212ac",
+                    "tool_call_id": "call_qrETPjxCGGvOqJr5eP26OVEb",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "input_parameters": {
+                    "source": "todo.txt",
+                    "destination": "tasks.txt"
+                  }
+                }
+              ],
+              "children": [
+                {
+                  "name": "move_file",
+                  "type": "tool",
+                  "integration": "LangChain",
+                  "input": {
+                    "source": "todo.txt",
+                    "destination": "tasks.txt"
+                  },
+                  "output": {
+                    "content": "Moved todo.txt -> tasks.txt",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "move_file",
+                    "id": "3fa1bf3b-a8e7-4230-ab9c-7fc74ee212ac",
+                    "tool_call_id": "call_qrETPjxCGGvOqJr5eP26OVEb",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 359.0,
+                  "output_token_count": 17.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "The file has been successfully renamed from `todo.txt` to `tasks.txt`.",
+                    "tool_calls": []
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "responder",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "response": "The file has been successfully renamed from `todo.txt` to `tasks.txt`."
+      },
+      "children": [
+        {
+          "name": "ChatOpenAI",
+          "type": "llm",
+          "integration": "LangChain",
+          "model": "gpt-4o-mini-2024-07-18",
+          "provider": "openai",
+          "input_token_count": 107.0,
+          "output_token_count": 16.0,
+          "output": {
+            "role": "AI",
+            "content": "The file has been successfully renamed from `todo.txt` to `tasks.txt`.",
+            "tool_calls": []
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

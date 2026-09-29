@@ -1,0 +1,470 @@
+{
+  "name": "file_manager_agent",
+  "type": "base",
+  "integration": "LangChain",
+  "input": {
+    "task": "Delete every .tmp file in the workspace, including those inside subfolders",
+    "past_steps": []
+  },
+  "output": {
+    "task": "Delete every .tmp file in the workspace, including those inside subfolders",
+    "plan": [
+      "Call delete_file with source='cache.tmp'",
+      "Call delete_file with source='old_draft.tmp'",
+      "Call delete_file with source='reports/draft_q3_2024.tmp'"
+    ],
+    "past_steps": [
+      [
+        "Call delete_file with source='cache.tmp'",
+        "The file `cache.tmp` has been deleted."
+      ],
+      [
+        "Call delete_file with source='old_draft.tmp'",
+        "The file `old_draft.tmp` has been deleted."
+      ],
+      [
+        "Call delete_file with source='reports/draft_q3_2024.tmp'",
+        "The file `reports/draft_q3_2024.tmp` has been deleted."
+      ]
+    ],
+    "response": "All .tmp files in the workspace, including those in subfolders, have been successfully deleted."
+  },
+  "children": [
+    {
+      "name": "planner",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "plan": [
+          "Call delete_file with source='cache.tmp'",
+          "Call delete_file with source='old_draft.tmp'",
+          "Call delete_file with source='reports/draft_q3_2024.tmp'"
+        ]
+      },
+      "children": [
+        {
+          "name": "RunnableSequence",
+          "type": "base",
+          "integration": "LangChain",
+          "children": [
+            {
+              "name": "ChatOpenAI",
+              "type": "llm",
+              "integration": "LangChain",
+              "model": "gpt-4o-mini-2024-07-18",
+              "provider": "openai",
+              "input_token_count": 491.0,
+              "output_token_count": 43.0,
+              "output": {
+                "role": "AI",
+                "content": "{\"steps\":[\"Call delete_file with source='cache.tmp'\",\"Call delete_file with source='old_draft.tmp'\",\"Call delete_file with source='reports/draft_q3_2024.tmp'\"]}",
+                "tool_calls": []
+              },
+              "children": []
+            },
+            {
+              "name": "RunnableLambda",
+              "type": "base",
+              "integration": "LangChain",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "executor",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "past_steps": [
+          [
+            "Call delete_file with source='cache.tmp'",
+            "The file `cache.tmp` has been deleted."
+          ]
+        ]
+      },
+      "children": [
+        {
+          "name": "step_executor",
+          "type": "base",
+          "integration": "LangChain",
+          "children": [
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 349.0,
+                  "output_token_count": 15.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "",
+                    "tool_calls": [
+                      {
+                        "name": "delete_file",
+                        "args": {
+                          "path": "cache.tmp"
+                        },
+                        "id": "call_2NSfKbGJQEGWdVUhiCdSrPQy"
+                      }
+                    ]
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "tools",
+              "type": "base",
+              "integration": "LangChain",
+              "tools_called": [
+                {
+                  "name": "delete_file",
+                  "type": "FUNCTION",
+                  "description": null,
+                  "reasoning": null,
+                  "output": {
+                    "content": "Deleted cache.tmp",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "delete_file",
+                    "id": "7d2e4886-6e2a-4bff-ae31-ed5e9b3a4c24",
+                    "tool_call_id": "call_2NSfKbGJQEGWdVUhiCdSrPQy",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "input_parameters": {
+                    "path": "cache.tmp"
+                  }
+                }
+              ],
+              "children": [
+                {
+                  "name": "delete_file",
+                  "type": "tool",
+                  "integration": "LangChain",
+                  "input": {
+                    "path": "cache.tmp"
+                  },
+                  "output": {
+                    "content": "Deleted cache.tmp",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "delete_file",
+                    "id": "7d2e4886-6e2a-4bff-ae31-ed5e9b3a4c24",
+                    "tool_call_id": "call_2NSfKbGJQEGWdVUhiCdSrPQy",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 378.0,
+                  "output_token_count": 11.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "The file `cache.tmp` has been deleted.",
+                    "tool_calls": []
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "executor",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "past_steps": [
+          [
+            "Call delete_file with source='old_draft.tmp'",
+            "The file `old_draft.tmp` has been deleted."
+          ]
+        ]
+      },
+      "children": [
+        {
+          "name": "step_executor",
+          "type": "base",
+          "integration": "LangChain",
+          "children": [
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 369.0,
+                  "output_token_count": 17.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "",
+                    "tool_calls": [
+                      {
+                        "name": "delete_file",
+                        "args": {
+                          "path": "old_draft.tmp"
+                        },
+                        "id": "call_qW4QPvu98QUtzKN83dvzJlqJ"
+                      }
+                    ]
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "tools",
+              "type": "base",
+              "integration": "LangChain",
+              "tools_called": [
+                {
+                  "name": "delete_file",
+                  "type": "FUNCTION",
+                  "description": null,
+                  "reasoning": null,
+                  "output": {
+                    "content": "Deleted old_draft.tmp",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "delete_file",
+                    "id": "70df1856-a1d2-40cf-81d2-78fd00250958",
+                    "tool_call_id": "call_qW4QPvu98QUtzKN83dvzJlqJ",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "input_parameters": {
+                    "path": "old_draft.tmp"
+                  }
+                }
+              ],
+              "children": [
+                {
+                  "name": "delete_file",
+                  "type": "tool",
+                  "integration": "LangChain",
+                  "input": {
+                    "path": "old_draft.tmp"
+                  },
+                  "output": {
+                    "content": "Deleted old_draft.tmp",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "delete_file",
+                    "id": "70df1856-a1d2-40cf-81d2-78fd00250958",
+                    "tool_call_id": "call_qW4QPvu98QUtzKN83dvzJlqJ",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 402.0,
+                  "output_token_count": 13.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "The file `old_draft.tmp` has been deleted.",
+                    "tool_calls": []
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "executor",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "past_steps": [
+          [
+            "Call delete_file with source='reports/draft_q3_2024.tmp'",
+            "The file `reports/draft_q3_2024.tmp` has been deleted."
+          ]
+        ]
+      },
+      "children": [
+        {
+          "name": "step_executor",
+          "type": "base",
+          "integration": "LangChain",
+          "children": [
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 400.0,
+                  "output_token_count": 22.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "",
+                    "tool_calls": [
+                      {
+                        "name": "delete_file",
+                        "args": {
+                          "path": "reports/draft_q3_2024.tmp"
+                        },
+                        "id": "call_qDuOalMxpqpvqF9uLSKSmyY1"
+                      }
+                    ]
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "tools",
+              "type": "base",
+              "integration": "LangChain",
+              "tools_called": [
+                {
+                  "name": "delete_file",
+                  "type": "FUNCTION",
+                  "description": null,
+                  "reasoning": null,
+                  "output": {
+                    "content": "Deleted reports/draft_q3_2024.tmp",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "delete_file",
+                    "id": "36896a96-20b9-4f4b-a35c-8b31d557b36c",
+                    "tool_call_id": "call_qDuOalMxpqpvqF9uLSKSmyY1",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "input_parameters": {
+                    "path": "reports/draft_q3_2024.tmp"
+                  }
+                }
+              ],
+              "children": [
+                {
+                  "name": "delete_file",
+                  "type": "tool",
+                  "integration": "LangChain",
+                  "input": {
+                    "path": "reports/draft_q3_2024.tmp"
+                  },
+                  "output": {
+                    "content": "Deleted reports/draft_q3_2024.tmp",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "delete_file",
+                    "id": "36896a96-20b9-4f4b-a35c-8b31d557b36c",
+                    "tool_call_id": "call_qDuOalMxpqpvqF9uLSKSmyY1",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 443.0,
+                  "output_token_count": 18.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "The file `reports/draft_q3_2024.tmp` has been deleted.",
+                    "tool_calls": []
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "responder",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "response": "All .tmp files in the workspace, including those in subfolders, have been successfully deleted."
+      },
+      "children": [
+        {
+          "name": "ChatOpenAI",
+          "type": "llm",
+          "integration": "LangChain",
+          "model": "gpt-4o-mini-2024-07-18",
+          "provider": "openai",
+          "input_token_count": 161.0,
+          "output_token_count": 19.0,
+          "output": {
+            "role": "AI",
+            "content": "All .tmp files in the workspace, including those in subfolders, have been successfully deleted.",
+            "tool_calls": []
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

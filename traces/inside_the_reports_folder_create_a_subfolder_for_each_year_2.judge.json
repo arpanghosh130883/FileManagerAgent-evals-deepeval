@@ -1,0 +1,869 @@
+{
+  "name": "file_manager_agent",
+  "type": "base",
+  "integration": "LangChain",
+  "input": {
+    "task": "Inside the reports folder, create a subfolder for each year (2023 and 2024) and move every quarterly PDF into the folder for its year",
+    "past_steps": []
+  },
+  "output": {
+    "task": "Inside the reports folder, create a subfolder for each year (2023 and 2024) and move every quarterly PDF into the folder for its year",
+    "plan": [
+      "Call create_folder with path='reports/2023'",
+      "Call create_folder with path='reports/2024'",
+      "Call move_file with source='reports/q4_2023.pdf' and destination='reports/2023/q4_2023.pdf'",
+      "Call move_file with source='reports/q1_2024.pdf' and destination='reports/2024/q1_2024.pdf'",
+      "Call move_file with source='reports/q2_2024.pdf' and destination='reports/2024/q2_2024.pdf'",
+      "Call move_file with source='reports/q3_2024.pdf' and destination='reports/2024/q3_2024.pdf'"
+    ],
+    "past_steps": [
+      [
+        "Call create_folder with path='reports/2023'",
+        "The folder 'reports/2023' has been created successfully."
+      ],
+      [
+        "Call create_folder with path='reports/2024'",
+        "The folder 'reports/2024' has been created successfully."
+      ],
+      [
+        "Call move_file with source='reports/q4_2023.pdf' and destination='reports/2023/q4_2023.pdf'",
+        "The file 'reports/q4_2023.pdf' has been moved to 'reports/2023/q4_2023.pdf' successfully."
+      ],
+      [
+        "Call move_file with source='reports/q1_2024.pdf' and destination='reports/2024/q1_2024.pdf'",
+        "The file 'reports/q1_2024.pdf' has been moved to 'reports/2024/q1_2024.pdf' successfully."
+      ],
+      [
+        "Call move_file with source='reports/q2_2024.pdf' and destination='reports/2024/q2_2024.pdf'",
+        "The file 'reports/q2_2024.pdf' has been moved to 'reports/2024/q2_2024.pdf' successfully."
+      ],
+      [
+        "Call move_file with source='reports/q3_2024.pdf' and destination='reports/2024/q3_2024.pdf'",
+        "The file 'reports/q3_2024.pdf' has been moved to 'reports/2024/q3_2024.pdf' successfully."
+      ]
+    ],
+    "response": "The folders for 2023 and 2024 have been created successfully, and the quarterly PDFs have been moved to their respective year folders."
+  },
+  "children": [
+    {
+      "name": "planner",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "plan": [
+          "Call create_folder with path='reports/2023'",
+          "Call create_folder with path='reports/2024'",
+          "Call move_file with source='reports/q4_2023.pdf' and destination='reports/2023/q4_2023.pdf'",
+          "Call move_file with source='reports/q1_2024.pdf' and destination='reports/2024/q1_2024.pdf'",
+          "Call move_file with source='reports/q2_2024.pdf' and destination='reports/2024/q2_2024.pdf'",
+          "Call move_file with source='reports/q3_2024.pdf' and destination='reports/2024/q3_2024.pdf'"
+        ]
+      },
+      "children": [
+        {
+          "name": "RunnableSequence",
+          "type": "base",
+          "integration": "LangChain",
+          "children": [
+            {
+              "name": "ChatOpenAI",
+              "type": "llm",
+              "integration": "LangChain",
+              "model": "gpt-4o-mini-2024-07-18",
+              "provider": "openai",
+              "input_token_count": 508.0,
+              "output_token_count": 144.0,
+              "output": {
+                "role": "AI",
+                "content": "{\"steps\":[\"Call create_folder with path='reports/2023'\",\"Call create_folder with path='reports/2024'\",\"Call move_file with source='reports/q4_2023.pdf' and destination='reports/2023/q4_2023.pdf'\",\"Call move_file with source='reports/q1_2024.pdf' and destination='reports/2024/q1_2024.pdf'\",\"Call move_file with source='reports/q2_2024.pdf' and destination='reports/2024/q2_2024.pdf'\",\"Call move_file with source='reports/q3_2024.pdf' and destination='reports/2024/q3_2024.pdf'\"]}",
+                "tool_calls": []
+              },
+              "children": []
+            },
+            {
+              "name": "RunnableLambda",
+              "type": "base",
+              "integration": "LangChain",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "executor",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "past_steps": [
+          [
+            "Call create_folder with path='reports/2023'",
+            "The folder 'reports/2023' has been created successfully."
+          ]
+        ]
+      },
+      "children": [
+        {
+          "name": "step_executor",
+          "type": "base",
+          "integration": "LangChain",
+          "children": [
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 472.0,
+                  "output_token_count": 17.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "",
+                    "tool_calls": [
+                      {
+                        "name": "create_folder",
+                        "args": {
+                          "path": "reports/2023"
+                        },
+                        "id": "call_kzCKnVl9RssHpvcDiafYYvoC"
+                      }
+                    ]
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "tools",
+              "type": "base",
+              "integration": "LangChain",
+              "tools_called": [
+                {
+                  "name": "create_folder",
+                  "type": "FUNCTION",
+                  "description": null,
+                  "reasoning": null,
+                  "output": {
+                    "content": "Created folder reports/2023/",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "create_folder",
+                    "id": "ce169fc0-0679-4ea2-b0a2-4afaeeb9aef8",
+                    "tool_call_id": "call_kzCKnVl9RssHpvcDiafYYvoC",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "input_parameters": {
+                    "path": "reports/2023"
+                  }
+                }
+              ],
+              "children": [
+                {
+                  "name": "create_folder",
+                  "type": "tool",
+                  "integration": "LangChain",
+                  "input": {
+                    "path": "reports/2023"
+                  },
+                  "output": {
+                    "content": "Created folder reports/2023/",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "create_folder",
+                    "id": "ce169fc0-0679-4ea2-b0a2-4afaeeb9aef8",
+                    "tool_call_id": "call_kzCKnVl9RssHpvcDiafYYvoC",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 507.0,
+                  "output_token_count": 14.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "The folder 'reports/2023' has been created successfully.",
+                    "tool_calls": []
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "executor",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "past_steps": [
+          [
+            "Call create_folder with path='reports/2024'",
+            "The folder 'reports/2024' has been created successfully."
+          ]
+        ]
+      },
+      "children": [
+        {
+          "name": "step_executor",
+          "type": "base",
+          "integration": "LangChain",
+          "children": [
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 495.0,
+                  "output_token_count": 17.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "",
+                    "tool_calls": [
+                      {
+                        "name": "create_folder",
+                        "args": {
+                          "path": "reports/2024"
+                        },
+                        "id": "call_K6lU3zoKeDeP6Wr4zozP4wHl"
+                      }
+                    ]
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "tools",
+              "type": "base",
+              "integration": "LangChain",
+              "tools_called": [
+                {
+                  "name": "create_folder",
+                  "type": "FUNCTION",
+                  "description": null,
+                  "reasoning": null,
+                  "output": {
+                    "content": "Created folder reports/2024/",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "create_folder",
+                    "id": "ed8dd860-3bf8-4cc2-ade2-1032af19f18e",
+                    "tool_call_id": "call_K6lU3zoKeDeP6Wr4zozP4wHl",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "input_parameters": {
+                    "path": "reports/2024"
+                  }
+                }
+              ],
+              "children": [
+                {
+                  "name": "create_folder",
+                  "type": "tool",
+                  "integration": "LangChain",
+                  "input": {
+                    "path": "reports/2024"
+                  },
+                  "output": {
+                    "content": "Created folder reports/2024/",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "create_folder",
+                    "id": "ed8dd860-3bf8-4cc2-ade2-1032af19f18e",
+                    "tool_call_id": "call_K6lU3zoKeDeP6Wr4zozP4wHl",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 530.0,
+                  "output_token_count": 14.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "The folder 'reports/2024' has been created successfully.",
+                    "tool_calls": []
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "executor",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "past_steps": [
+          [
+            "Call move_file with source='reports/q4_2023.pdf' and destination='reports/2023/q4_2023.pdf'",
+            "The file 'reports/q4_2023.pdf' has been moved to 'reports/2023/q4_2023.pdf' successfully."
+          ]
+        ]
+      },
+      "children": [
+        {
+          "name": "step_executor",
+          "type": "base",
+          "integration": "LangChain",
+          "children": [
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 539.0,
+                  "output_token_count": 33.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "",
+                    "tool_calls": [
+                      {
+                        "name": "move_file",
+                        "args": {
+                          "source": "reports/q4_2023.pdf",
+                          "destination": "reports/2023/q4_2023.pdf"
+                        },
+                        "id": "call_TjpFU9CnMHMRKRmw28o8izgi"
+                      }
+                    ]
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "tools",
+              "type": "base",
+              "integration": "LangChain",
+              "tools_called": [
+                {
+                  "name": "move_file",
+                  "type": "FUNCTION",
+                  "description": null,
+                  "reasoning": null,
+                  "output": {
+                    "content": "Moved reports/q4_2023.pdf -> reports/2023/q4_2023.pdf",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "move_file",
+                    "id": "1ba89216-0a76-4299-b82c-5f21614ce7c0",
+                    "tool_call_id": "call_TjpFU9CnMHMRKRmw28o8izgi",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "input_parameters": {
+                    "source": "reports/q4_2023.pdf",
+                    "destination": "reports/2023/q4_2023.pdf"
+                  }
+                }
+              ],
+              "children": [
+                {
+                  "name": "move_file",
+                  "type": "tool",
+                  "integration": "LangChain",
+                  "input": {
+                    "source": "reports/q4_2023.pdf",
+                    "destination": "reports/2023/q4_2023.pdf"
+                  },
+                  "output": {
+                    "content": "Moved reports/q4_2023.pdf -> reports/2023/q4_2023.pdf",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "move_file",
+                    "id": "1ba89216-0a76-4299-b82c-5f21614ce7c0",
+                    "tool_call_id": "call_TjpFU9CnMHMRKRmw28o8izgi",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 602.0,
+                  "output_token_count": 30.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "The file 'reports/q4_2023.pdf' has been moved to 'reports/2023/q4_2023.pdf' successfully.",
+                    "tool_calls": []
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "executor",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "past_steps": [
+          [
+            "Call move_file with source='reports/q1_2024.pdf' and destination='reports/2024/q1_2024.pdf'",
+            "The file 'reports/q1_2024.pdf' has been moved to 'reports/2024/q1_2024.pdf' successfully."
+          ]
+        ]
+      },
+      "children": [
+        {
+          "name": "step_executor",
+          "type": "base",
+          "integration": "LangChain",
+          "children": [
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 599.0,
+                  "output_token_count": 33.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "",
+                    "tool_calls": [
+                      {
+                        "name": "move_file",
+                        "args": {
+                          "source": "reports/q1_2024.pdf",
+                          "destination": "reports/2024/q1_2024.pdf"
+                        },
+                        "id": "call_OQjr4MIvqKjnuiEoCjT6uYSr"
+                      }
+                    ]
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "tools",
+              "type": "base",
+              "integration": "LangChain",
+              "tools_called": [
+                {
+                  "name": "move_file",
+                  "type": "FUNCTION",
+                  "description": null,
+                  "reasoning": null,
+                  "output": {
+                    "content": "Moved reports/q1_2024.pdf -> reports/2024/q1_2024.pdf",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "move_file",
+                    "id": "94215677-a4ae-4ee8-9349-743edeb6ce8f",
+                    "tool_call_id": "call_OQjr4MIvqKjnuiEoCjT6uYSr",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "input_parameters": {
+                    "source": "reports/q1_2024.pdf",
+                    "destination": "reports/2024/q1_2024.pdf"
+                  }
+                }
+              ],
+              "children": [
+                {
+                  "name": "move_file",
+                  "type": "tool",
+                  "integration": "LangChain",
+                  "input": {
+                    "source": "reports/q1_2024.pdf",
+                    "destination": "reports/2024/q1_2024.pdf"
+                  },
+                  "output": {
+                    "content": "Moved reports/q1_2024.pdf -> reports/2024/q1_2024.pdf",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "move_file",
+                    "id": "94215677-a4ae-4ee8-9349-743edeb6ce8f",
+                    "tool_call_id": "call_OQjr4MIvqKjnuiEoCjT6uYSr",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 662.0,
+                  "output_token_count": 30.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "The file 'reports/q1_2024.pdf' has been moved to 'reports/2024/q1_2024.pdf' successfully.",
+                    "tool_calls": []
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "executor",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "past_steps": [
+          [
+            "Call move_file with source='reports/q2_2024.pdf' and destination='reports/2024/q2_2024.pdf'",
+            "The file 'reports/q2_2024.pdf' has been moved to 'reports/2024/q2_2024.pdf' successfully."
+          ]
+        ]
+      },
+      "children": [
+        {
+          "name": "step_executor",
+          "type": "base",
+          "integration": "LangChain",
+          "children": [
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 659.0,
+                  "output_token_count": 33.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "",
+                    "tool_calls": [
+                      {
+                        "name": "move_file",
+                        "args": {
+                          "source": "reports/q2_2024.pdf",
+                          "destination": "reports/2024/q2_2024.pdf"
+                        },
+                        "id": "call_F5qVK70s8zsoCV8z3lUCUL7d"
+                      }
+                    ]
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "tools",
+              "type": "base",
+              "integration": "LangChain",
+              "tools_called": [
+                {
+                  "name": "move_file",
+                  "type": "FUNCTION",
+                  "description": null,
+                  "reasoning": null,
+                  "output": {
+                    "content": "Moved reports/q2_2024.pdf -> reports/2024/q2_2024.pdf",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "move_file",
+                    "id": "5edeb17d-59b2-4d2a-816e-4609c51253af",
+                    "tool_call_id": "call_F5qVK70s8zsoCV8z3lUCUL7d",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "input_parameters": {
+                    "source": "reports/q2_2024.pdf",
+                    "destination": "reports/2024/q2_2024.pdf"
+                  }
+                }
+              ],
+              "children": [
+                {
+                  "name": "move_file",
+                  "type": "tool",
+                  "integration": "LangChain",
+                  "input": {
+                    "source": "reports/q2_2024.pdf",
+                    "destination": "reports/2024/q2_2024.pdf"
+                  },
+                  "output": {
+                    "content": "Moved reports/q2_2024.pdf -> reports/2024/q2_2024.pdf",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "move_file",
+                    "id": "5edeb17d-59b2-4d2a-816e-4609c51253af",
+                    "tool_call_id": "call_F5qVK70s8zsoCV8z3lUCUL7d",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 722.0,
+                  "output_token_count": 30.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "The file 'reports/q2_2024.pdf' has been moved to 'reports/2024/q2_2024.pdf' successfully.",
+                    "tool_calls": []
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "executor",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "past_steps": [
+          [
+            "Call move_file with source='reports/q3_2024.pdf' and destination='reports/2024/q3_2024.pdf'",
+            "The file 'reports/q3_2024.pdf' has been moved to 'reports/2024/q3_2024.pdf' successfully."
+          ]
+        ]
+      },
+      "children": [
+        {
+          "name": "step_executor",
+          "type": "base",
+          "integration": "LangChain",
+          "children": [
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 719.0,
+                  "output_token_count": 33.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "",
+                    "tool_calls": [
+                      {
+                        "name": "move_file",
+                        "args": {
+                          "source": "reports/q3_2024.pdf",
+                          "destination": "reports/2024/q3_2024.pdf"
+                        },
+                        "id": "call_wpCOm8sp6xXEeMcFRwS5MirO"
+                      }
+                    ]
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "tools",
+              "type": "base",
+              "integration": "LangChain",
+              "tools_called": [
+                {
+                  "name": "move_file",
+                  "type": "FUNCTION",
+                  "description": null,
+                  "reasoning": null,
+                  "output": {
+                    "content": "Moved reports/q3_2024.pdf -> reports/2024/q3_2024.pdf",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "move_file",
+                    "id": "02b59b95-466c-4fcc-b28f-1963967f2991",
+                    "tool_call_id": "call_wpCOm8sp6xXEeMcFRwS5MirO",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "input_parameters": {
+                    "source": "reports/q3_2024.pdf",
+                    "destination": "reports/2024/q3_2024.pdf"
+                  }
+                }
+              ],
+              "children": [
+                {
+                  "name": "move_file",
+                  "type": "tool",
+                  "integration": "LangChain",
+                  "input": {
+                    "source": "reports/q3_2024.pdf",
+                    "destination": "reports/2024/q3_2024.pdf"
+                  },
+                  "output": {
+                    "content": "Moved reports/q3_2024.pdf -> reports/2024/q3_2024.pdf",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "move_file",
+                    "id": "02b59b95-466c-4fcc-b28f-1963967f2991",
+                    "tool_call_id": "call_wpCOm8sp6xXEeMcFRwS5MirO",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 782.0,
+                  "output_token_count": 30.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "The file 'reports/q3_2024.pdf' has been moved to 'reports/2024/q3_2024.pdf' successfully.",
+                    "tool_calls": []
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "responder",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "response": "The folders for 2023 and 2024 have been created successfully, and the quarterly PDFs have been moved to their respective year folders."
+      },
+      "children": [
+        {
+          "name": "ChatOpenAI",
+          "type": "llm",
+          "integration": "LangChain",
+          "model": "gpt-4o-mini-2024-07-18",
+          "provider": "openai",
+          "input_token_count": 382.0,
+          "output_token_count": 28.0,
+          "output": {
+            "role": "AI",
+            "content": "The folders for 2023 and 2024 have been created successfully, and the quarterly PDFs have been moved to their respective year folders.",
+            "tool_calls": []
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

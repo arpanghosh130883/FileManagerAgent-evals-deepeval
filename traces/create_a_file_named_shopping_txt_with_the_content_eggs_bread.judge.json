@@ -1,0 +1,215 @@
+{
+  "name": "file_manager_agent",
+  "type": "base",
+  "integration": "LangChain",
+  "input": {
+    "task": "Create a file named shopping.txt with the content 'eggs, bread, milk'",
+    "past_steps": []
+  },
+  "output": {
+    "task": "Create a file named shopping.txt with the content 'eggs, bread, milk'",
+    "plan": [
+      "Call create_file with filename='shopping.txt' and content='eggs, bread, milk'"
+    ],
+    "past_steps": [
+      [
+        "Call create_file with filename='shopping.txt' and content='eggs, bread, milk'",
+        "The file `shopping.txt` has been created with the content 'eggs, bread, milk'."
+      ]
+    ],
+    "response": "The file `shopping.txt` has been successfully created with the content 'eggs, bread, milk'."
+  },
+  "children": [
+    {
+      "name": "planner",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "plan": [
+          "Call create_file with filename='shopping.txt' and content='eggs, bread, milk'"
+        ]
+      },
+      "children": [
+        {
+          "name": "RunnableSequence",
+          "type": "base",
+          "integration": "LangChain",
+          "children": [
+            {
+              "name": "ChatOpenAI",
+              "type": "llm",
+              "integration": "LangChain",
+              "model": "gpt-4o-mini-2024-07-18",
+              "provider": "openai",
+              "input_token_count": 493.0,
+              "output_token_count": 24.0,
+              "output": {
+                "role": "AI",
+                "content": "{\"steps\":[\"Call create_file with filename='shopping.txt' and content='eggs, bread, milk'\"]}",
+                "tool_calls": []
+              },
+              "children": []
+            },
+            {
+              "name": "RunnableLambda",
+              "type": "base",
+              "integration": "LangChain",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "executor",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "past_steps": [
+          [
+            "Call create_file with filename='shopping.txt' and content='eggs, bread, milk'",
+            "The file `shopping.txt` has been created with the content 'eggs, bread, milk'."
+          ]
+        ]
+      },
+      "children": [
+        {
+          "name": "step_executor",
+          "type": "base",
+          "integration": "LangChain",
+          "children": [
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 340.0,
+                  "output_token_count": 24.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "",
+                    "tool_calls": [
+                      {
+                        "name": "create_file",
+                        "args": {
+                          "path": "shopping.txt",
+                          "content": "eggs, bread, milk"
+                        },
+                        "id": "call_iOiTkweyOv2cbfIeFX4aHhoI"
+                      }
+                    ]
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "tools",
+              "type": "base",
+              "integration": "LangChain",
+              "tools_called": [
+                {
+                  "name": "create_file",
+                  "type": "FUNCTION",
+                  "description": null,
+                  "reasoning": null,
+                  "output": {
+                    "content": "Created shopping.txt",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "create_file",
+                    "id": "e8c0bd8d-a00b-4eb0-806f-e8c2e672e735",
+                    "tool_call_id": "call_iOiTkweyOv2cbfIeFX4aHhoI",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "input_parameters": {
+                    "path": "shopping.txt",
+                    "content": "eggs, bread, milk"
+                  }
+                }
+              ],
+              "children": [
+                {
+                  "name": "create_file",
+                  "type": "tool",
+                  "integration": "LangChain",
+                  "input": {
+                    "path": "shopping.txt",
+                    "content": "eggs, bread, milk"
+                  },
+                  "output": {
+                    "content": "Created shopping.txt",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "create_file",
+                    "id": "e8c0bd8d-a00b-4eb0-806f-e8c2e672e735",
+                    "tool_call_id": "call_iOiTkweyOv2cbfIeFX4aHhoI",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 378.0,
+                  "output_token_count": 21.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "The file `shopping.txt` has been created with the content 'eggs, bread, milk'.",
+                    "tool_calls": []
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "responder",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "response": "The file `shopping.txt` has been successfully created with the content 'eggs, bread, milk'."
+      },
+      "children": [
+        {
+          "name": "ChatOpenAI",
+          "type": "llm",
+          "integration": "LangChain",
+          "model": "gpt-4o-mini-2024-07-18",
+          "provider": "openai",
+          "input_token_count": 125.0,
+          "output_token_count": 21.0,
+          "output": {
+            "role": "AI",
+            "content": "The file `shopping.txt` has been successfully created with the content 'eggs, bread, milk'.",
+            "tool_calls": []
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

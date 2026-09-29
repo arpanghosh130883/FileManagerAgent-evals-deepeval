@@ -1,0 +1,215 @@
+{
+  "name": "file_manager_agent",
+  "type": "base",
+  "integration": "LangChain",
+  "input": {
+    "task": "Move budget.xlsx into the archive folder",
+    "past_steps": []
+  },
+  "output": {
+    "task": "Move budget.xlsx into the archive folder",
+    "plan": [
+      "Call move_file with source='budget.xlsx' and destination='archive'"
+    ],
+    "past_steps": [
+      [
+        "Call move_file with source='budget.xlsx' and destination='archive'",
+        "The file `budget.xlsx` has been successfully moved to the `archive` folder."
+      ]
+    ],
+    "response": "The file `budget.xlsx` has been successfully moved to the `archive` folder."
+  },
+  "children": [
+    {
+      "name": "planner",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "plan": [
+          "Call move_file with source='budget.xlsx' and destination='archive'"
+        ]
+      },
+      "children": [
+        {
+          "name": "RunnableSequence",
+          "type": "base",
+          "integration": "LangChain",
+          "children": [
+            {
+              "name": "ChatOpenAI",
+              "type": "llm",
+              "integration": "LangChain",
+              "model": "gpt-4o-mini-2024-07-18",
+              "provider": "openai",
+              "input_token_count": 484.0,
+              "output_token_count": 19.0,
+              "output": {
+                "role": "AI",
+                "content": "{\"steps\":[\"Call move_file with source='budget.xlsx' and destination='archive'\"]}",
+                "tool_calls": []
+              },
+              "children": []
+            },
+            {
+              "name": "RunnableLambda",
+              "type": "base",
+              "integration": "LangChain",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "executor",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "past_steps": [
+          [
+            "Call move_file with source='budget.xlsx' and destination='archive'",
+            "The file `budget.xlsx` has been successfully moved to the `archive` folder."
+          ]
+        ]
+      },
+      "children": [
+        {
+          "name": "step_executor",
+          "type": "base",
+          "integration": "LangChain",
+          "children": [
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 321.0,
+                  "output_token_count": 19.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "",
+                    "tool_calls": [
+                      {
+                        "name": "move_file",
+                        "args": {
+                          "source": "budget.xlsx",
+                          "destination": "archive"
+                        },
+                        "id": "call_8Z79Pz7X8oOgANK7OZuv5dle"
+                      }
+                    ]
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "tools",
+              "type": "base",
+              "integration": "LangChain",
+              "tools_called": [
+                {
+                  "name": "move_file",
+                  "type": "FUNCTION",
+                  "description": null,
+                  "reasoning": null,
+                  "output": {
+                    "content": "Moved budget.xlsx -> archive/budget.xlsx",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "move_file",
+                    "id": "c93b4794-5998-4c6c-8ec7-7514869942d1",
+                    "tool_call_id": "call_8Z79Pz7X8oOgANK7OZuv5dle",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "input_parameters": {
+                    "source": "budget.xlsx",
+                    "destination": "archive"
+                  }
+                }
+              ],
+              "children": [
+                {
+                  "name": "move_file",
+                  "type": "tool",
+                  "integration": "LangChain",
+                  "input": {
+                    "source": "budget.xlsx",
+                    "destination": "archive"
+                  },
+                  "output": {
+                    "content": "Moved budget.xlsx -> archive/budget.xlsx",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "move_file",
+                    "id": "c93b4794-5998-4c6c-8ec7-7514869942d1",
+                    "tool_call_id": "call_8Z79Pz7X8oOgANK7OZuv5dle",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 359.0,
+                  "output_token_count": 18.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "The file `budget.xlsx` has been successfully moved to the `archive` folder.",
+                    "tool_calls": []
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "responder",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "response": "The file `budget.xlsx` has been successfully moved to the `archive` folder."
+      },
+      "children": [
+        {
+          "name": "ChatOpenAI",
+          "type": "llm",
+          "integration": "LangChain",
+          "model": "gpt-4o-mini-2024-07-18",
+          "provider": "openai",
+          "input_token_count": 108.0,
+          "output_token_count": 17.0,
+          "output": {
+            "role": "AI",
+            "content": "The file `budget.xlsx` has been successfully moved to the `archive` folder.",
+            "tool_calls": []
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

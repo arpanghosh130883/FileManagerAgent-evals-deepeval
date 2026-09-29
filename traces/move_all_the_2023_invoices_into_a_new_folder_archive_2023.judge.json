@@ -1,0 +1,476 @@
+{
+  "name": "file_manager_agent",
+  "type": "base",
+  "integration": "LangChain",
+  "input": {
+    "task": "Move all the 2023 invoices into a new folder archive/2023",
+    "past_steps": []
+  },
+  "output": {
+    "task": "Move all the 2023 invoices into a new folder archive/2023",
+    "plan": [
+      "Call create_folder with path='archive/2023'",
+      "Call move_file with source='invoices/invoice_2023_11.pdf' and destination='archive/2023'",
+      "Call move_file with source='invoices/invoice_2023_12.pdf' and destination='archive/2023'"
+    ],
+    "past_steps": [
+      [
+        "Call create_folder with path='archive/2023'",
+        "The folder `archive/2023` has been created successfully."
+      ],
+      [
+        "Call move_file with source='invoices/invoice_2023_11.pdf' and destination='archive/2023'",
+        "The file `invoices/invoice_2023_11.pdf` has been moved to `archive/2023/invoice_2023_11.pdf`."
+      ],
+      [
+        "Call move_file with source='invoices/invoice_2023_12.pdf' and destination='archive/2023'",
+        "The file `invoices/invoice_2023_12.pdf` has been moved to `archive/2023/invoice_2023_12.pdf`."
+      ]
+    ],
+    "response": "The folder `archive/2023` has been created, and the invoices `invoice_2023_11.pdf` and `invoice_2023_12.pdf` have been moved into it."
+  },
+  "children": [
+    {
+      "name": "planner",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "plan": [
+          "Call create_folder with path='archive/2023'",
+          "Call move_file with source='invoices/invoice_2023_11.pdf' and destination='archive/2023'",
+          "Call move_file with source='invoices/invoice_2023_12.pdf' and destination='archive/2023'"
+        ]
+      },
+      "children": [
+        {
+          "name": "RunnableSequence",
+          "type": "base",
+          "integration": "LangChain",
+          "children": [
+            {
+              "name": "ChatOpenAI",
+              "type": "llm",
+              "integration": "LangChain",
+              "model": "gpt-4o-mini-2024-07-18",
+              "provider": "openai",
+              "input_token_count": 492.0,
+              "output_token_count": 68.0,
+              "output": {
+                "role": "AI",
+                "content": "{\"steps\":[\"Call create_folder with path='archive/2023'\",\"Call move_file with source='invoices/invoice_2023_11.pdf' and destination='archive/2023'\",\"Call move_file with source='invoices/invoice_2023_12.pdf' and destination='archive/2023'\"]}",
+                "tool_calls": []
+              },
+              "children": []
+            },
+            {
+              "name": "RunnableLambda",
+              "type": "base",
+              "integration": "LangChain",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "executor",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "past_steps": [
+          [
+            "Call create_folder with path='archive/2023'",
+            "The folder `archive/2023` has been created successfully."
+          ]
+        ]
+      },
+      "children": [
+        {
+          "name": "step_executor",
+          "type": "base",
+          "integration": "LangChain",
+          "children": [
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 377.0,
+                  "output_token_count": 17.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "",
+                    "tool_calls": [
+                      {
+                        "name": "create_folder",
+                        "args": {
+                          "path": "archive/2023"
+                        },
+                        "id": "call_BSv13PIaRZSdE9PuctVQ1bWP"
+                      }
+                    ]
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "tools",
+              "type": "base",
+              "integration": "LangChain",
+              "tools_called": [
+                {
+                  "name": "create_folder",
+                  "type": "FUNCTION",
+                  "description": null,
+                  "reasoning": null,
+                  "output": {
+                    "content": "Created folder archive/2023/",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "create_folder",
+                    "id": "c0efbc14-c8a6-44da-95ce-627c34a74a64",
+                    "tool_call_id": "call_BSv13PIaRZSdE9PuctVQ1bWP",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "input_parameters": {
+                    "path": "archive/2023"
+                  }
+                }
+              ],
+              "children": [
+                {
+                  "name": "create_folder",
+                  "type": "tool",
+                  "integration": "LangChain",
+                  "input": {
+                    "path": "archive/2023"
+                  },
+                  "output": {
+                    "content": "Created folder archive/2023/",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "create_folder",
+                    "id": "c0efbc14-c8a6-44da-95ce-627c34a74a64",
+                    "tool_call_id": "call_BSv13PIaRZSdE9PuctVQ1bWP",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 412.0,
+                  "output_token_count": 14.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "The folder `archive/2023` has been created successfully.",
+                    "tool_calls": []
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "executor",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "past_steps": [
+          [
+            "Call move_file with source='invoices/invoice_2023_11.pdf' and destination='archive/2023'",
+            "The file `invoices/invoice_2023_11.pdf` has been moved to `archive/2023/invoice_2023_11.pdf`."
+          ]
+        ]
+      },
+      "children": [
+        {
+          "name": "step_executor",
+          "type": "base",
+          "integration": "LangChain",
+          "children": [
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 414.0,
+                  "output_token_count": 30.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "",
+                    "tool_calls": [
+                      {
+                        "name": "move_file",
+                        "args": {
+                          "source": "invoices/invoice_2023_11.pdf",
+                          "destination": "archive/2023"
+                        },
+                        "id": "call_aWhX5sZ0vZWvwT4uAvFRA2GZ"
+                      }
+                    ]
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "tools",
+              "type": "base",
+              "integration": "LangChain",
+              "tools_called": [
+                {
+                  "name": "move_file",
+                  "type": "FUNCTION",
+                  "description": null,
+                  "reasoning": null,
+                  "output": {
+                    "content": "Moved invoices/invoice_2023_11.pdf -> archive/2023/invoice_2023_11.pdf",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "move_file",
+                    "id": "99f29b38-cde0-46b0-91a5-dd121b536042",
+                    "tool_call_id": "call_aWhX5sZ0vZWvwT4uAvFRA2GZ",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "input_parameters": {
+                    "source": "invoices/invoice_2023_11.pdf",
+                    "destination": "archive/2023"
+                  }
+                }
+              ],
+              "children": [
+                {
+                  "name": "move_file",
+                  "type": "tool",
+                  "integration": "LangChain",
+                  "input": {
+                    "source": "invoices/invoice_2023_11.pdf",
+                    "destination": "archive/2023"
+                  },
+                  "output": {
+                    "content": "Moved invoices/invoice_2023_11.pdf -> archive/2023/invoice_2023_11.pdf",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "move_file",
+                    "id": "99f29b38-cde0-46b0-91a5-dd121b536042",
+                    "tool_call_id": "call_aWhX5sZ0vZWvwT4uAvFRA2GZ",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 478.0,
+                  "output_token_count": 33.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "The file `invoices/invoice_2023_11.pdf` has been moved to `archive/2023/invoice_2023_11.pdf`.",
+                    "tool_calls": []
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "executor",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "past_steps": [
+          [
+            "Call move_file with source='invoices/invoice_2023_12.pdf' and destination='archive/2023'",
+            "The file `invoices/invoice_2023_12.pdf` has been moved to `archive/2023/invoice_2023_12.pdf`."
+          ]
+        ]
+      },
+      "children": [
+        {
+          "name": "step_executor",
+          "type": "base",
+          "integration": "LangChain",
+          "children": [
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 474.0,
+                  "output_token_count": 30.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "",
+                    "tool_calls": [
+                      {
+                        "name": "move_file",
+                        "args": {
+                          "source": "invoices/invoice_2023_12.pdf",
+                          "destination": "archive/2023"
+                        },
+                        "id": "call_pYkiwlQXvFVzcMjT46UThQSo"
+                      }
+                    ]
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "tools",
+              "type": "base",
+              "integration": "LangChain",
+              "tools_called": [
+                {
+                  "name": "move_file",
+                  "type": "FUNCTION",
+                  "description": null,
+                  "reasoning": null,
+                  "output": {
+                    "content": "Moved invoices/invoice_2023_12.pdf -> archive/2023/invoice_2023_12.pdf",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "move_file",
+                    "id": "01296efa-4b11-4ea6-a342-a4c08a4577e0",
+                    "tool_call_id": "call_pYkiwlQXvFVzcMjT46UThQSo",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "input_parameters": {
+                    "source": "invoices/invoice_2023_12.pdf",
+                    "destination": "archive/2023"
+                  }
+                }
+              ],
+              "children": [
+                {
+                  "name": "move_file",
+                  "type": "tool",
+                  "integration": "LangChain",
+                  "input": {
+                    "source": "invoices/invoice_2023_12.pdf",
+                    "destination": "archive/2023"
+                  },
+                  "output": {
+                    "content": "Moved invoices/invoice_2023_12.pdf -> archive/2023/invoice_2023_12.pdf",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "move_file",
+                    "id": "01296efa-4b11-4ea6-a342-a4c08a4577e0",
+                    "tool_call_id": "call_pYkiwlQXvFVzcMjT46UThQSo",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 538.0,
+                  "output_token_count": 33.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "The file `invoices/invoice_2023_12.pdf` has been moved to `archive/2023/invoice_2023_12.pdf`.",
+                    "tool_calls": []
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "responder",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "response": "The folder `archive/2023` has been created, and the invoices `invoice_2023_11.pdf` and `invoice_2023_12.pdf` have been moved into it."
+      },
+      "children": [
+        {
+          "name": "ChatOpenAI",
+          "type": "llm",
+          "integration": "LangChain",
+          "model": "gpt-4o-mini-2024-07-18",
+          "provider": "openai",
+          "input_token_count": 225.0,
+          "output_token_count": 40.0,
+          "output": {
+            "role": "AI",
+            "content": "The folder `archive/2023` has been created, and the invoices `invoice_2023_11.pdf` and `invoice_2023_12.pdf` have been moved into it.",
+            "tool_calls": []
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

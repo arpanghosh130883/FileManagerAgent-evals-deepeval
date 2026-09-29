@@ -1,0 +1,341 @@
+{
+  "name": "file_manager_agent",
+  "type": "base",
+  "integration": "LangChain",
+  "input": {
+    "task": "Which meeting note mentions the launch date, and what is the date?",
+    "past_steps": []
+  },
+  "output": {
+    "task": "Which meeting note mentions the launch date, and what is the date?",
+    "plan": [
+      "Call read_file with filename='notes/meeting_feb.txt'",
+      "Call read_file with filename='notes/meeting_jan.txt'"
+    ],
+    "past_steps": [
+      [
+        "Call read_file with filename='notes/meeting_feb.txt'",
+        "The meeting note from February mentions the launch date as 15 March."
+      ],
+      [
+        "Call read_file with filename='notes/meeting_jan.txt'",
+        "The meeting note from January does not mention a launch date. The February meeting note mentions the launch date as 15 March."
+      ]
+    ],
+    "response": "The meeting note from February mentions the launch date, which is 15 March."
+  },
+  "children": [
+    {
+      "name": "planner",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "plan": [
+          "Call read_file with filename='notes/meeting_feb.txt'",
+          "Call read_file with filename='notes/meeting_jan.txt'"
+        ]
+      },
+      "children": [
+        {
+          "name": "RunnableSequence",
+          "type": "base",
+          "integration": "LangChain",
+          "children": [
+            {
+              "name": "ChatOpenAI",
+              "type": "llm",
+              "integration": "LangChain",
+              "model": "gpt-4o-mini-2024-07-18",
+              "provider": "openai",
+              "input_token_count": 490.0,
+              "output_token_count": 32.0,
+              "output": {
+                "role": "AI",
+                "content": "{\"steps\":[\"Call read_file with filename='notes/meeting_feb.txt'\",\"Call read_file with filename='notes/meeting_jan.txt'\"]}",
+                "tool_calls": []
+              },
+              "children": []
+            },
+            {
+              "name": "RunnableLambda",
+              "type": "base",
+              "integration": "LangChain",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "executor",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "past_steps": [
+          [
+            "Call read_file with filename='notes/meeting_feb.txt'",
+            "The meeting note from February mentions the launch date as 15 March."
+          ]
+        ]
+      },
+      "children": [
+        {
+          "name": "step_executor",
+          "type": "base",
+          "integration": "LangChain",
+          "children": [
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 340.0,
+                  "output_token_count": 19.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "",
+                    "tool_calls": [
+                      {
+                        "name": "read_file",
+                        "args": {
+                          "path": "notes/meeting_feb.txt"
+                        },
+                        "id": "call_dreGnGuJazYl3v0a9IVqz6JD"
+                      }
+                    ]
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "tools",
+              "type": "base",
+              "integration": "LangChain",
+              "tools_called": [
+                {
+                  "name": "read_file",
+                  "type": "FUNCTION",
+                  "description": null,
+                  "reasoning": null,
+                  "output": {
+                    "content": "Launch date fixed: 15 March. Owner: Priya.\n",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "read_file",
+                    "id": "ed9fd5a3-bd8c-4702-b949-339b1cc879aa",
+                    "tool_call_id": "call_dreGnGuJazYl3v0a9IVqz6JD",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "input_parameters": {
+                    "path": "notes/meeting_feb.txt"
+                  }
+                }
+              ],
+              "children": [
+                {
+                  "name": "read_file",
+                  "type": "tool",
+                  "integration": "LangChain",
+                  "input": {
+                    "path": "notes/meeting_feb.txt"
+                  },
+                  "output": {
+                    "content": "Launch date fixed: 15 March. Owner: Priya.\n",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "read_file",
+                    "id": "ed9fd5a3-bd8c-4702-b949-339b1cc879aa",
+                    "tool_call_id": "call_dreGnGuJazYl3v0a9IVqz6JD",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 383.0,
+                  "output_token_count": 15.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "The meeting note from February mentions the launch date as 15 March.",
+                    "tool_calls": []
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "executor",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "past_steps": [
+          [
+            "Call read_file with filename='notes/meeting_jan.txt'",
+            "The meeting note from January does not mention a launch date. The February meeting note mentions the launch date as 15 March."
+          ]
+        ]
+      },
+      "children": [
+        {
+          "name": "step_executor",
+          "type": "base",
+          "integration": "LangChain",
+          "children": [
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 366.0,
+                  "output_token_count": 19.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "",
+                    "tool_calls": [
+                      {
+                        "name": "read_file",
+                        "args": {
+                          "path": "notes/meeting_jan.txt"
+                        },
+                        "id": "call_ttaMjZAL1nE7pc0FBIjvMcbU"
+                      }
+                    ]
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "tools",
+              "type": "base",
+              "integration": "LangChain",
+              "tools_called": [
+                {
+                  "name": "read_file",
+                  "type": "FUNCTION",
+                  "description": null,
+                  "reasoning": null,
+                  "output": {
+                    "content": "Discussed hiring plans for Q2. No launch date yet.\n",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "read_file",
+                    "id": "9fcadbda-611c-447f-8e78-777dea18f2bb",
+                    "tool_call_id": "call_ttaMjZAL1nE7pc0FBIjvMcbU",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "input_parameters": {
+                    "path": "notes/meeting_jan.txt"
+                  }
+                }
+              ],
+              "children": [
+                {
+                  "name": "read_file",
+                  "type": "tool",
+                  "integration": "LangChain",
+                  "input": {
+                    "path": "notes/meeting_jan.txt"
+                  },
+                  "output": {
+                    "content": "Discussed hiring plans for Q2. No launch date yet.\n",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "read_file",
+                    "id": "9fcadbda-611c-447f-8e78-777dea18f2bb",
+                    "tool_call_id": "call_ttaMjZAL1nE7pc0FBIjvMcbU",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 409.0,
+                  "output_token_count": 26.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "The meeting note from January does not mention a launch date. The February meeting note mentions the launch date as 15 March.",
+                    "tool_calls": []
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "responder",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "response": "The meeting note from February mentions the launch date, which is 15 March."
+      },
+      "children": [
+        {
+          "name": "ChatOpenAI",
+          "type": "llm",
+          "integration": "LangChain",
+          "model": "gpt-4o-mini-2024-07-18",
+          "provider": "openai",
+          "input_token_count": 149.0,
+          "output_token_count": 16.0,
+          "output": {
+            "role": "AI",
+            "content": "The meeting note from February mentions the launch date, which is 15 March.",
+            "tool_calls": []
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

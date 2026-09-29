@@ -1,0 +1,212 @@
+{
+  "name": "file_manager_agent",
+  "type": "base",
+  "integration": "LangChain",
+  "input": {
+    "task": "List the files in the invoices folder",
+    "past_steps": []
+  },
+  "output": {
+    "task": "List the files in the invoices folder",
+    "plan": [
+      "Call list_files with folder='invoices'"
+    ],
+    "past_steps": [
+      [
+        "Call list_files with folder='invoices'",
+        "The files in the invoices folder are:\n- invoice_2023_11.pdf\n- invoice_2023_12.pdf\n- invoice_2024_01.pdf\n- invoice_2024_02.pdf"
+      ]
+    ],
+    "response": "The files in the invoices folder are: invoice_2023_11.pdf, invoice_2023_12.pdf, invoice_2024_01.pdf, and invoice_2024_02.pdf."
+  },
+  "children": [
+    {
+      "name": "planner",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "plan": [
+          "Call list_files with folder='invoices'"
+        ]
+      },
+      "children": [
+        {
+          "name": "RunnableSequence",
+          "type": "base",
+          "integration": "LangChain",
+          "children": [
+            {
+              "name": "ChatOpenAI",
+              "type": "llm",
+              "integration": "LangChain",
+              "model": "gpt-4o-mini-2024-07-18",
+              "provider": "openai",
+              "input_token_count": 484.0,
+              "output_token_count": 14.0,
+              "output": {
+                "role": "AI",
+                "content": "{\"steps\":[\"Call list_files with folder='invoices'\"]}",
+                "tool_calls": []
+              },
+              "children": []
+            },
+            {
+              "name": "RunnableLambda",
+              "type": "base",
+              "integration": "LangChain",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "executor",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "past_steps": [
+          [
+            "Call list_files with folder='invoices'",
+            "The files in the invoices folder are:\n- invoice_2023_11.pdf\n- invoice_2023_12.pdf\n- invoice_2024_01.pdf\n- invoice_2024_02.pdf"
+          ]
+        ]
+      },
+      "children": [
+        {
+          "name": "step_executor",
+          "type": "base",
+          "integration": "LangChain",
+          "children": [
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 311.0,
+                  "output_token_count": 15.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "",
+                    "tool_calls": [
+                      {
+                        "name": "list_files",
+                        "args": {
+                          "folder": "invoices"
+                        },
+                        "id": "call_6OKnGlagsdqMDJAjiZmojuna"
+                      }
+                    ]
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "tools",
+              "type": "base",
+              "integration": "LangChain",
+              "tools_called": [
+                {
+                  "name": "list_files",
+                  "type": "FUNCTION",
+                  "description": null,
+                  "reasoning": null,
+                  "output": {
+                    "content": "[\"invoice_2023_11.pdf\", \"invoice_2023_12.pdf\", \"invoice_2024_01.pdf\", \"invoice_2024_02.pdf\"]",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "list_files",
+                    "id": "c56b8ed6-ee92-4029-9e20-b4bd45a90eb7",
+                    "tool_call_id": "call_6OKnGlagsdqMDJAjiZmojuna",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "input_parameters": {
+                    "folder": "invoices"
+                  }
+                }
+              ],
+              "children": [
+                {
+                  "name": "list_files",
+                  "type": "tool",
+                  "integration": "LangChain",
+                  "input": {
+                    "folder": "invoices"
+                  },
+                  "output": {
+                    "content": "[\"invoice_2023_11.pdf\", \"invoice_2023_12.pdf\", \"invoice_2024_01.pdf\", \"invoice_2024_02.pdf\"]",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "list_files",
+                    "id": "c56b8ed6-ee92-4029-9e20-b4bd45a90eb7",
+                    "tool_call_id": "call_6OKnGlagsdqMDJAjiZmojuna",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 373.0,
+                  "output_token_count": 44.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "The files in the invoices folder are:\n- invoice_2023_11.pdf\n- invoice_2023_12.pdf\n- invoice_2024_01.pdf\n- invoice_2024_02.pdf",
+                    "tool_calls": []
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "responder",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "response": "The files in the invoices folder are: invoice_2023_11.pdf, invoice_2023_12.pdf, invoice_2024_01.pdf, and invoice_2024_02.pdf."
+      },
+      "children": [
+        {
+          "name": "ChatOpenAI",
+          "type": "llm",
+          "integration": "LangChain",
+          "model": "gpt-4o-mini-2024-07-18",
+          "provider": "openai",
+          "input_token_count": 129.0,
+          "output_token_count": 41.0,
+          "output": {
+            "role": "AI",
+            "content": "The files in the invoices folder are: invoice_2023_11.pdf, invoice_2023_12.pdf, invoice_2024_01.pdf, and invoice_2024_02.pdf.",
+            "tool_calls": []
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

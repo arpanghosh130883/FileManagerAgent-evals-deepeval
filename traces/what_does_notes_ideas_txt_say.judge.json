@@ -1,0 +1,212 @@
+{
+  "name": "file_manager_agent",
+  "type": "base",
+  "integration": "LangChain",
+  "input": {
+    "task": "What does notes/ideas.txt say?",
+    "past_steps": []
+  },
+  "output": {
+    "task": "What does notes/ideas.txt say?",
+    "plan": [
+      "Call read_file with filename='notes/ideas.txt'"
+    ],
+    "past_steps": [
+      [
+        "Call read_file with filename='notes/ideas.txt'",
+        "The file `notes/ideas.txt` contains the following content:\n\n- Dark mode\n- Offline sync\n- Export to CSV"
+      ]
+    ],
+    "response": "The file `notes/ideas.txt` contains the following ideas: Dark mode, Offline sync, and Export to CSV."
+  },
+  "children": [
+    {
+      "name": "planner",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "plan": [
+          "Call read_file with filename='notes/ideas.txt'"
+        ]
+      },
+      "children": [
+        {
+          "name": "RunnableSequence",
+          "type": "base",
+          "integration": "LangChain",
+          "children": [
+            {
+              "name": "ChatOpenAI",
+              "type": "llm",
+              "integration": "LangChain",
+              "model": "gpt-4o-mini-2024-07-18",
+              "provider": "openai",
+              "input_token_count": 484.0,
+              "output_token_count": 16.0,
+              "output": {
+                "role": "AI",
+                "content": "{\"steps\":[\"Call read_file with filename='notes/ideas.txt'\"]}",
+                "tool_calls": []
+              },
+              "children": []
+            },
+            {
+              "name": "RunnableLambda",
+              "type": "base",
+              "integration": "LangChain",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "executor",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "past_steps": [
+          [
+            "Call read_file with filename='notes/ideas.txt'",
+            "The file `notes/ideas.txt` contains the following content:\n\n- Dark mode\n- Offline sync\n- Export to CSV"
+          ]
+        ]
+      },
+      "children": [
+        {
+          "name": "step_executor",
+          "type": "base",
+          "integration": "LangChain",
+          "children": [
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 315.0,
+                  "output_token_count": 17.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "",
+                    "tool_calls": [
+                      {
+                        "name": "read_file",
+                        "args": {
+                          "path": "notes/ideas.txt"
+                        },
+                        "id": "call_UHVV1tQwYTDlrICS0b1znXsS"
+                      }
+                    ]
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "tools",
+              "type": "base",
+              "integration": "LangChain",
+              "tools_called": [
+                {
+                  "name": "read_file",
+                  "type": "FUNCTION",
+                  "description": null,
+                  "reasoning": null,
+                  "output": {
+                    "content": "Dark mode\nOffline sync\nExport to CSV\n",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "read_file",
+                    "id": "fe109e07-6a5d-4de7-8745-cca137199e42",
+                    "tool_call_id": "call_UHVV1tQwYTDlrICS0b1znXsS",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "input_parameters": {
+                    "path": "notes/ideas.txt"
+                  }
+                }
+              ],
+              "children": [
+                {
+                  "name": "read_file",
+                  "type": "tool",
+                  "integration": "LangChain",
+                  "input": {
+                    "path": "notes/ideas.txt"
+                  },
+                  "output": {
+                    "content": "Dark mode\nOffline sync\nExport to CSV\n",
+                    "additional_kwargs": {},
+                    "response_metadata": {},
+                    "type": "tool",
+                    "name": "read_file",
+                    "id": "fe109e07-6a5d-4de7-8745-cca137199e42",
+                    "tool_call_id": "call_UHVV1tQwYTDlrICS0b1znXsS",
+                    "artifact": null,
+                    "status": "success"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 353.0,
+                  "output_token_count": 26.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "The file `notes/ideas.txt` contains the following content:\n\n- Dark mode\n- Offline sync\n- Export to CSV",
+                    "tool_calls": []
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "responder",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "response": "The file `notes/ideas.txt` contains the following ideas: Dark mode, Offline sync, and Export to CSV."
+      },
+      "children": [
+        {
+          "name": "ChatOpenAI",
+          "type": "llm",
+          "integration": "LangChain",
+          "model": "gpt-4o-mini-2024-07-18",
+          "provider": "openai",
+          "input_token_count": 113.0,
+          "output_token_count": 24.0,
+          "output": {
+            "role": "AI",
+            "content": "The file `notes/ideas.txt` contains the following ideas: Dark mode, Offline sync, and Export to CSV.",
+            "tool_calls": []
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}
