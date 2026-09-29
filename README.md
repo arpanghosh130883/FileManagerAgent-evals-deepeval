@@ -60,12 +60,6 @@ OPENAI_API_KEY=sk-...
 
 ## Running
 
-Try the agent on a single task:
-
-```bash
-python agent.py "Move budget.xlsx into the archive folder"
-```
-
 Reset the workspace and print its layout:
 
 ```bash
