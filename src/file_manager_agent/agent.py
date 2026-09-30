@@ -15,8 +15,9 @@ Graph:
               planning visible in the trace, which the Plan Quality and
               Plan Adherence metrics need.
 - executor  : carries out ONE plan step per visit, using a small tool-calling
-              sub-agent (LangChain `create_agent`). It sees the whole plan and
-              what's been done so far, but is told to do only the current step.
+              sub-agent (LangChain `create_agent`). It sees only the current
+              step and the results of the steps before it, not the rest of the
+              plan, so it can't run ahead and do later steps early.
 - responder : writes the final answer from the step results.
 
 Everything happens inside the `data/workspace/` folder, which is defined and
@@ -198,12 +199,15 @@ Available tools:
 
 EXECUTOR_PROMPT = (
     "You are the EXECUTOR of a file-manager agent working in a sandboxed workspace. "
-    "You will be given the overall task, the full plan, the results of steps already "
-    "done, and the CURRENT step. Carry out only the current step. If it names a tool, "
-    "call that tool. If it refers to earlier steps, take what you need from COMPLETED "
-    "STEPS (e.g. the exact lines or paths they found). If it needs no tool, just do it. "
-    "Then reply with a short factual result of the step, including any information "
-    "found and any error a tool returned. Paths are relative to the workspace root."
+    "You are given the results of the steps already done and ONE current step. "
+    "Do exactly that step and nothing more:\n"
+    "- If the step says 'Call <tool>', make that one tool call, with those arguments.\n"
+    "- If it doesn't name a tool, don't call any tool. Work it out from the step text "
+    "and COMPLETED STEPS (e.g. the exact lines or paths they found).\n"
+    "- Don't do any other step's work, and don't mention what comes next.\n"
+    "Then reply with a short factual result of this step only, including any "
+    "information found and any error a tool returned. Paths are relative to the "
+    "workspace root."
 )
 
 RESPONDER_PROMPT = (
@@ -260,10 +264,12 @@ def build_agent(llm=None, planner_llm=None):
         plan, done = state["plan"], state["past_steps"]
         i = len(done)
         step = plan[i]
-        plan_text = "\n".join(f"{n}. {s}" for n, s in enumerate(plan, 1))
+        # Show ONLY what this step needs: earlier results + the current step.
+        # Not the task and not the rest of the plan: when the executor could see
+        # later steps, it kept doing them early (e.g. writing people.txt during a
+        # read step, or answering the question before the step that asks for it).
         done_text = "\n".join(f"{n}. {s} -> {r}" for n, (s, r) in enumerate(done, 1)) or "(none yet)"
         prompt = (
-            f"TASK: {state['task']}\n\nPLAN:\n{plan_text}\n\n"
             f"COMPLETED STEPS:\n{done_text}\n\n"
             f"CURRENT STEP ({i + 1}): {step}"
         )
