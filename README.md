@@ -46,9 +46,9 @@ Tools: `list_files`, `read_file`, `create_file`, `create_folder`, `move_file`, `
 │   ├── check_plan_judge.py     #   sanity check: does the plan judge tell bad plans from good?
 │   ├── slim_trace.py           #   shrinks the LangGraph trace before a judge reads it
 │   ├── report.py               #   writes a Markdown + CSV report of each eval run
-│   └── results/                #   eval outputs (git-ignored)
-│       ├── reports/            #     <name>_<date>_<time>.md / .csv
-│       └── traces/             #     <task>.raw.json and <task>.judge.json
+│   └── results/                #   eval outputs
+│       ├── reports/            #     <name>_<date>_<time>.md / .csv (committed)
+│       └── traces/             #     <task>.raw.json and <task>.judge.json (git-ignored)
 ├── goldens/goldens.json        # 15 test tasks, tagged easy / medium / difficult
 └── data/                       # runtime data (git-ignored, rebuilt by reset_sandbox())
     ├── workspace/              #   the agent's sandbox, wiped before every run
