@@ -1,12 +1,18 @@
 """
 Task Completion + Plan Quality eval for the LangGraph File Manager agent.
 
-Both metrics grade the SAME run: the agent runs once per golden, deepeval's
-`CallbackHandler` records one trace, and each metric reads that trace.
+All metrics grade the SAME run: the agent runs once per golden, deepeval's
+`CallbackHandler` records one trace, and the trace metrics read that trace.
 
     Task Completion  — did the task get done?   (judges the outcome)
-    Plan Quality     — was the plan any good?    (judges the plan the planner
-                                                  wrote, not how it was carried out)
+    Plan Quality     — was the plan any good?    (deepeval: sees the task and a
+                                                  paraphrase of the plan only)
+    Plan Quality (sees workspace)                (plan_judge.py: sees the task, the
+                                                  exact plan, the workspace listing
+                                                  and the tool list)
+
+The two Plan Quality scores use the same judge model, so the gap between them
+shows how much the missing context costs deepeval's metric.
 
 Running them together shows WHERE a failure comes from:
     good plan  + task done     → working as intended
@@ -39,8 +45,9 @@ from deepeval.integrations.langchain import CallbackHandler
 from deepeval.metrics import PlanQualityMetric, TaskCompletionMetric
 
 from agent import build_agent, run_agent
+from plan_judge import make_plan_judge, plan_test_case
 from report import write_report
-from sandbox import reset_sandbox
+from sandbox import list_workspace, reset_sandbox
 from slim_trace import with_slim_trace
 
 JUDGE_MODEL = "gpt-4o-mini"
@@ -71,13 +78,22 @@ if __name__ == "__main__":
 
     # One golden at a time, with a pause, to stay under OpenAI rate limits.
     async_config = AsyncConfig(max_concurrent=1, throttle_value=15)
+    # Don't ask "Open run in deepeval inspect TUI? [Y/n]" — finish by itself.
+    display_config = DisplayConfig(inspect_after_run=False)
 
     rows = []   # (golden, {name: metric}) — scores filled in by deepeval after the loop
     try:
-        for golden in dataset.evals_iterator(async_config=async_config):
+        for golden in dataset.evals_iterator(
+            async_config=async_config, display_config=display_config
+        ):
             reset_sandbox()   # every golden starts from the same 20 files
-            # A fresh pair for every golden — a metric stores its own score and reason.
-            metrics = {
+            # Exactly the listing the planner is about to see (the workspace was just reset).
+            listing = list_workspace()
+
+            # Fresh metrics for every golden — a metric stores its own score and reason.
+            # The first two grade the trace (deepeval); the third grades the plan with
+            # the workspace and tools in view (plan_judge.py). Same judge model for all.
+            trace_metrics = {
                 "Task Completion": SlimTaskCompletion(
                     threshold=THRESHOLD, model=JUDGE_MODEL, include_reason=True, verbose_mode=True
                 ),
@@ -85,12 +101,21 @@ if __name__ == "__main__":
                     threshold=THRESHOLD, model=JUDGE_MODEL, include_reason=True, verbose_mode=True
                 ),
             }
-            rows.append((golden, metrics))
-            run_agent(
+            plan_judge = make_plan_judge(model='gpt-4o', threshold=THRESHOLD)
+            rows.append((golden, {**trace_metrics, "Plan Quality (sees workspace)": plan_judge}))
+
+            state = run_agent(
                 agent,
                 golden.input,
-                callbacks=[CallbackHandler(metrics=list(metrics.values()))],
+                callbacks=[CallbackHandler(metrics=list(trace_metrics.values()))],
+                full=True,
             )
+
+            # Grade the plan now, while we have it and the listing.
+            try:
+                plan_judge.measure(plan_test_case(golden.input, state["plan"], listing))
+            except Exception as e:           # show it in the report instead of crashing
+                plan_judge.error = f"{type(e).__name__}: {e}"
     finally:
         # Always write the report, even if the run crashed or was stopped.
         if rows:

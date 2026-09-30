@@ -39,10 +39,10 @@
               "name": "ChatOpenAI",
               "type": "llm",
               "integration": "LangChain",
-              "model": "gpt-4o-mini-2024-07-18",
+              "model": "gpt-5.6-terra",
               "provider": "openai",
-              "input_token_count": 483.0,
-              "output_token_count": 20.0,
+              "input_token_count": 1173.0,
+              "output_token_count": 26.0,
               "output": {
                 "role": "AI",
                 "content": "{\"steps\":[\"Call move_file with source='todo.txt' and destination='tasks.txt'\"]}",
@@ -89,7 +89,7 @@
                   "integration": "LangChain",
                   "model": "gpt-4o-mini-2024-07-18",
                   "provider": "openai",
-                  "input_token_count": 322.0,
+                  "input_token_count": 523.0,
                   "output_token_count": 20.0,
                   "output": {
                     "role": "AI",
@@ -101,7 +101,7 @@
                           "source": "todo.txt",
                           "destination": "tasks.txt"
                         },
-                        "id": "call_qrETPjxCGGvOqJr5eP26OVEb"
+                        "id": "call_9WLbiCxc2bBCMp4SJEGpehj4"
                       }
                     ]
                   },
@@ -125,8 +125,8 @@
                     "response_metadata": {},
                     "type": "tool",
                     "name": "move_file",
-                    "id": "3fa1bf3b-a8e7-4230-ab9c-7fc74ee212ac",
-                    "tool_call_id": "call_qrETPjxCGGvOqJr5eP26OVEb",
+                    "id": "659931e7-d44b-44c2-8abd-480acec19ce6",
+                    "tool_call_id": "call_9WLbiCxc2bBCMp4SJEGpehj4",
                     "artifact": null,
                     "status": "success"
                   },
@@ -151,8 +151,8 @@
                     "response_metadata": {},
                     "type": "tool",
                     "name": "move_file",
-                    "id": "3fa1bf3b-a8e7-4230-ab9c-7fc74ee212ac",
-                    "tool_call_id": "call_qrETPjxCGGvOqJr5eP26OVEb",
+                    "id": "659931e7-d44b-44c2-8abd-480acec19ce6",
+                    "tool_call_id": "call_9WLbiCxc2bBCMp4SJEGpehj4",
                     "artifact": null,
                     "status": "success"
                   },
@@ -171,7 +171,7 @@
                   "integration": "LangChain",
                   "model": "gpt-4o-mini-2024-07-18",
                   "provider": "openai",
-                  "input_token_count": 359.0,
+                  "input_token_count": 560.0,
                   "output_token_count": 17.0,
                   "output": {
                     "role": "AI",
@@ -200,7 +200,7 @@
           "integration": "LangChain",
           "model": "gpt-4o-mini-2024-07-18",
           "provider": "openai",
-          "input_token_count": 107.0,
+          "input_token_count": 124.0,
           "output_token_count": 16.0,
           "output": {
             "role": "AI",

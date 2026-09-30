@@ -39,10 +39,10 @@
               "name": "ChatOpenAI",
               "type": "llm",
               "integration": "LangChain",
-              "model": "gpt-4o-mini-2024-07-18",
+              "model": "gpt-5.6-terra",
               "provider": "openai",
-              "input_token_count": 484.0,
-              "output_token_count": 19.0,
+              "input_token_count": 1174.0,
+              "output_token_count": 25.0,
               "output": {
                 "role": "AI",
                 "content": "{\"steps\":[\"Call move_file with source='budget.xlsx' and destination='archive'\"]}",
@@ -89,7 +89,7 @@
                   "integration": "LangChain",
                   "model": "gpt-4o-mini-2024-07-18",
                   "provider": "openai",
-                  "input_token_count": 321.0,
+                  "input_token_count": 522.0,
                   "output_token_count": 19.0,
                   "output": {
                     "role": "AI",
@@ -101,7 +101,7 @@
                           "source": "budget.xlsx",
                           "destination": "archive"
                         },
-                        "id": "call_8Z79Pz7X8oOgANK7OZuv5dle"
+                        "id": "call_CQJib3MPfe0DF6V27ap2ou51"
                       }
                     ]
                   },
@@ -125,8 +125,8 @@
                     "response_metadata": {},
                     "type": "tool",
                     "name": "move_file",
-                    "id": "c93b4794-5998-4c6c-8ec7-7514869942d1",
-                    "tool_call_id": "call_8Z79Pz7X8oOgANK7OZuv5dle",
+                    "id": "18f6cd2d-a996-471d-8fe5-a618e564f5f8",
+                    "tool_call_id": "call_CQJib3MPfe0DF6V27ap2ou51",
                     "artifact": null,
                     "status": "success"
                   },
@@ -151,8 +151,8 @@
                     "response_metadata": {},
                     "type": "tool",
                     "name": "move_file",
-                    "id": "c93b4794-5998-4c6c-8ec7-7514869942d1",
-                    "tool_call_id": "call_8Z79Pz7X8oOgANK7OZuv5dle",
+                    "id": "18f6cd2d-a996-471d-8fe5-a618e564f5f8",
+                    "tool_call_id": "call_CQJib3MPfe0DF6V27ap2ou51",
                     "artifact": null,
                     "status": "success"
                   },
@@ -171,7 +171,7 @@
                   "integration": "LangChain",
                   "model": "gpt-4o-mini-2024-07-18",
                   "provider": "openai",
-                  "input_token_count": 359.0,
+                  "input_token_count": 560.0,
                   "output_token_count": 18.0,
                   "output": {
                     "role": "AI",
@@ -200,7 +200,7 @@
           "integration": "LangChain",
           "model": "gpt-4o-mini-2024-07-18",
           "provider": "openai",
-          "input_token_count": 108.0,
+          "input_token_count": 125.0,
           "output_token_count": 17.0,
           "output": {
             "role": "AI",

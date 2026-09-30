@@ -9,11 +9,11 @@
   "output": {
     "task": "Create a file named shopping.txt with the content 'eggs, bread, milk'",
     "plan": [
-      "Call create_file with filename='shopping.txt' and content='eggs, bread, milk'"
+      "Call create_file with path='shopping.txt' and content='eggs, bread, milk'"
     ],
     "past_steps": [
       [
-        "Call create_file with filename='shopping.txt' and content='eggs, bread, milk'",
+        "Call create_file with path='shopping.txt' and content='eggs, bread, milk'",
         "The file `shopping.txt` has been created with the content 'eggs, bread, milk'."
       ]
     ],
@@ -24,11 +24,7 @@
       "name": "planner",
       "type": "base",
       "integration": "LangChain",
-      "output": {
-        "plan": [
-          "Call create_file with filename='shopping.txt' and content='eggs, bread, milk'"
-        ]
-      },
+      "output": "```json\n{\n  \"score\": 10,\n  \"reason\": \"The plan correctly uses the create_file tool to create a file named 'shopping.txt' with the specified content 'eggs, bread, milk'. There are no skipped files or unnecessary steps, and the file name matches the task requirements. The plan is efficient and complete, with no extraneous actions.\"\n}\n```",
       "children": [
         {
           "name": "RunnableSequence",
@@ -39,13 +35,13 @@
               "name": "ChatOpenAI",
               "type": "llm",
               "integration": "LangChain",
-              "model": "gpt-4o-mini-2024-07-18",
+              "model": "gpt-5.6-terra",
               "provider": "openai",
-              "input_token_count": 493.0,
-              "output_token_count": 24.0,
+              "input_token_count": 1183.0,
+              "output_token_count": 30.0,
               "output": {
                 "role": "AI",
-                "content": "{\"steps\":[\"Call create_file with filename='shopping.txt' and content='eggs, bread, milk'\"]}",
+                "content": "{\"steps\":[\"Call create_file with path='shopping.txt' and content='eggs, bread, milk'\"]}",
                 "tool_calls": []
               },
               "children": []
@@ -67,7 +63,7 @@
       "output": {
         "past_steps": [
           [
-            "Call create_file with filename='shopping.txt' and content='eggs, bread, milk'",
+            "Call create_file with path='shopping.txt' and content='eggs, bread, milk'",
             "The file `shopping.txt` has been created with the content 'eggs, bread, milk'."
           ]
         ]
@@ -89,7 +85,7 @@
                   "integration": "LangChain",
                   "model": "gpt-4o-mini-2024-07-18",
                   "provider": "openai",
-                  "input_token_count": 340.0,
+                  "input_token_count": 541.0,
                   "output_token_count": 24.0,
                   "output": {
                     "role": "AI",
@@ -101,7 +97,7 @@
                           "path": "shopping.txt",
                           "content": "eggs, bread, milk"
                         },
-                        "id": "call_iOiTkweyOv2cbfIeFX4aHhoI"
+                        "id": "call_QEgkUp3fRrk5Og4c3bnpVY7S"
                       }
                     ]
                   },
@@ -125,8 +121,8 @@
                     "response_metadata": {},
                     "type": "tool",
                     "name": "create_file",
-                    "id": "e8c0bd8d-a00b-4eb0-806f-e8c2e672e735",
-                    "tool_call_id": "call_iOiTkweyOv2cbfIeFX4aHhoI",
+                    "id": "bcc3fe8d-1943-498b-ab7c-c5f719d57198",
+                    "tool_call_id": "call_QEgkUp3fRrk5Og4c3bnpVY7S",
                     "artifact": null,
                     "status": "success"
                   },
@@ -151,8 +147,8 @@
                     "response_metadata": {},
                     "type": "tool",
                     "name": "create_file",
-                    "id": "e8c0bd8d-a00b-4eb0-806f-e8c2e672e735",
-                    "tool_call_id": "call_iOiTkweyOv2cbfIeFX4aHhoI",
+                    "id": "bcc3fe8d-1943-498b-ab7c-c5f719d57198",
+                    "tool_call_id": "call_QEgkUp3fRrk5Og4c3bnpVY7S",
                     "artifact": null,
                     "status": "success"
                   },
@@ -171,7 +167,7 @@
                   "integration": "LangChain",
                   "model": "gpt-4o-mini-2024-07-18",
                   "provider": "openai",
-                  "input_token_count": 378.0,
+                  "input_token_count": 579.0,
                   "output_token_count": 21.0,
                   "output": {
                     "role": "AI",
@@ -200,7 +196,7 @@
           "integration": "LangChain",
           "model": "gpt-4o-mini-2024-07-18",
           "provider": "openai",
-          "input_token_count": 125.0,
+          "input_token_count": 142.0,
           "output_token_count": 21.0,
           "output": {
             "role": "AI",

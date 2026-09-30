@@ -9,8 +9,9 @@ Graph:
 
 - planner   : one LLM call that writes an explicit, numbered plan. It is shown
               a listing of the workspace first, so it plans with real file
-              names instead of guessing them
-              (structured output -> list of steps). This makes the agent's
+              names instead of guessing them (structured output -> list of
+              steps). It uses a stronger model than the other two nodes,
+              because planning is the hardest part. This makes the agent's
               planning visible in the trace, which the Plan Quality and
               Plan Adherence metrics need.
 - executor  : carries out ONE plan step per visit, using a small tool-calling
@@ -23,9 +24,6 @@ in sandbox.py. The tools below can only touch files inside it.
 
 Setup — create a file named .env in this folder containing:
     OPENAI_API_KEY=sk-...
-
-Try it directly:
-    python agent.py "Move budget.xlsx into the archive folder"
 """
 
 import json
@@ -46,13 +44,20 @@ from sandbox import SANDBOX, list_workspace, safe_path
 # Read OPENAI_API_KEY (and any other settings) from a .env file next to this script.
 load_dotenv()
 
+# Models: a stronger model plans; a small, cheap one executes and answers.
+PLANNER_MODEL = "gpt-5.6-terra"
+WORKER_MODEL = "gpt-4o-mini"
+
 
 # ===========================================================================
-# 1. Tools — the @tool docstring is what the model reads to pick a tool
+# 1. Tools — the @tool docstring is what the models read to pick a tool,
+#    so each one says what it does AND what it doesn't do.
 # ===========================================================================
 @tool
 def list_files(folder: str = ".") -> str:
-    """List files and folders inside a workspace folder. Use '.' for the root."""
+    """List what is directly inside one workspace folder (use '.' for the root).
+    Names ending in '/' are folders. Does not look inside subfolders: list each
+    subfolder separately."""
     p = safe_path(folder)
     if not p.is_dir():
         return f"Error: folder '{folder}' not found"
@@ -61,14 +66,16 @@ def list_files(folder: str = ".") -> str:
 
 @tool
 def read_file(path: str) -> str:
-    """Read the text content of a file."""
+    """Return the full text content of one file. Only needed when the task depends
+    on what is inside the file; file names alone are visible with list_files."""
     p = safe_path(path)
     return p.read_text() if p.is_file() else f"Error: file '{path}' not found"
 
 
 @tool
 def create_file(path: str, content: str) -> str:
-    """Create (or overwrite) a file with the given text content."""
+    """Create a file with the given text, or overwrite it if it already exists.
+    Missing parent folders are created. Write the complete final text in one call."""
     p = safe_path(path)
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(content)
@@ -77,14 +84,17 @@ def create_file(path: str, content: str) -> str:
 
 @tool
 def create_folder(path: str) -> str:
-    """Create a folder (and any missing parent folders)."""
+    """Create a folder, including any missing parent folders. Does nothing if it
+    already exists."""
     safe_path(path).mkdir(parents=True, exist_ok=True)
     return f"Created folder {path}/"
 
 
 @tool
 def move_file(source: str, destination: str) -> str:
-    """Move a file to a destination folder or path. The source is removed."""
+    """Move one file. If destination is an existing folder, the file keeps its name
+    inside it; otherwise destination is the new path, so this also renames files.
+    The source is removed."""
     src, dst = safe_path(source), safe_path(destination)
     if not src.exists():
         return f"Error: '{source}' not found"
@@ -96,7 +106,7 @@ def move_file(source: str, destination: str) -> str:
 
 @tool
 def delete_file(path: str) -> str:
-    """Permanently delete a single file."""
+    """Permanently delete one file. Cannot delete folders: use delete_folder."""
     p = safe_path(path)
     if not p.is_file():
         return f"Error: file '{path}' not found"
@@ -104,39 +114,103 @@ def delete_file(path: str) -> str:
     return f"Deleted {path}"
 
 
-TOOLS = [list_files, read_file, create_file, create_folder, move_file, delete_file]
-TOOL_LIST = "\n".join(f"- {t.name}: {t.description}" for t in TOOLS)
+@tool
+def delete_folder(path: str) -> str:
+    """Permanently delete a folder and everything inside it (files and subfolders)
+    in one call. There is no need to delete its contents first."""
+    p = safe_path(path)
+    if p == SANDBOX:
+        return "Error: the workspace root cannot be deleted"
+    if not p.is_dir():
+        return f"Error: folder '{path}' not found"
+    shutil.rmtree(p)
+    return f"Deleted folder {path}/ and everything in it"
+
+
+TOOLS = [list_files, read_file, create_file, create_folder, move_file, delete_file,
+         delete_folder]
+# Show each tool with its argument names, e.g. "- delete_file(path): Permanently ...",
+# so the planner uses the real names (path, content) instead of guessing (source, text).
+TOOL_LIST = "\n".join(
+    f"- {t.name}({', '.join(t.args)}): {' '.join(t.description.split())}" for t in TOOLS
+)
 
 
 # ===========================================================================
 # 2. Prompts
 # ===========================================================================
-PLANNER_PROMPT = (
-    "You are the PLANNER of a file-manager agent that works in a sandboxed workspace.\n"
-    "Break the user's task into the smallest set of concrete steps needed to complete it.\n"
-    "Each step must be one action that names the tool and its arguments, e.g.\n"
-    "  \"Call move_file with source='budget.xlsx' and destination='archive'\".\n"
-    "Use at most 10 steps and no unnecessary steps. Paths are relative to the workspace "
-    "root.\n"
-    "You are given a listing of every file and folder currently in the workspace "
-    "(folders end with '/'). Use only file and folder names that appear in that listing, "
-    "or that the task asks you to create. Never invent a name. The listing shows names "
-    "only: if the task depends on what files contain, add steps to read them.\n\n"
-    f"Available tools:\n{TOOL_LIST}"
-)
+PLANNER_PROMPT = f"""\
+You are the PLANNER of a file-manager agent that works in a sandboxed workspace.
+Break the user's task into the smallest set of steps that completes it (at most 10).
+Paths are relative to the workspace root.
+
+You are given a listing of every file and folder currently in the workspace
+(folders end with '/'). Use only names from that listing, or names the task asks
+you to create. Never invent a name.
+
+What a step can be:
+- A tool call, naming the tool and its arguments exactly as listed below, e.g.
+  "Call move_file with source='a.txt' and destination='backup'".
+- A step that needs no tool: working something out from earlier results
+  (e.g. "Count the names from step 1 that end in .csv"), or telling the user
+  something (e.g. "Tell the user: ...").
+
+Rules:
+1. Don't guess what a later step depends on. If a step needs something an earlier
+   step will find out (a file's contents, which files match), refer to that step
+   instead of writing the answer in advance. Never make up file contents.
+2. When the task says every / all / each, check the whole listing: every matching
+   item, in every folder, including the root and nested folders.
+3. Read a file only when the task depends on what is inside it. Counting, moving,
+   renaming and deleting files only need their names, which the listing shows.
+4. Use each tool only for what its description says. If a name in the task is not
+   in the listing, or no tool can do part of the task, don't call a tool for that
+   part: add a step that tells the user what can't be done and why.
+
+Examples (a different workspace from the user's; the plan is what matters):
+
+Workspace: data/, data/sales.csv, data/costs.csv, data/notes.md, old/, old/q1.csv
+Task: How many CSV files are in the data folder?
+Plan:
+  1. Call list_files with folder='data'
+  2. Count the names from step 1 that end in .csv and report the number
+
+Workspace: mail/, mail/mon.txt, mail/tue.txt, archive/, archive/2023/, archive/2023/dec.txt, readme.txt
+Task: Write the path of every .txt file that mentions "refund" into refunds.txt, one per line.
+Plan:
+  1. Call read_file with path='mail/mon.txt'
+  2. Call read_file with path='mail/tue.txt'
+  3. Call read_file with path='archive/2023/dec.txt'
+  4. Call read_file with path='readme.txt'
+  5. Call create_file with path='refunds.txt' and content = the paths from steps 1-4
+     whose text mentions "refund", one per line
+
+Workspace: build/, build/app.bin, build/tmp/, build/tmp/cache.dat, src/, src/main.py
+Task: Remove the build folder and send the cleanup log to Sam.
+Plan:
+  1. Call delete_folder with path='build'
+  2. Tell the user: the build folder was deleted, but there is no tool for sending
+     messages and no cleanup log in the workspace, so nothing was sent to Sam
+
+Available tools:
+{TOOL_LIST}
+"""
 
 EXECUTOR_PROMPT = (
     "You are the EXECUTOR of a file-manager agent working in a sandboxed workspace. "
     "You will be given the overall task, the full plan, the results of steps already "
-    "done, and the CURRENT step. Carry out only the current step using the tools, then "
-    "reply with a short factual result of that step (include any information found). "
-    "Paths are relative to the workspace root."
+    "done, and the CURRENT step. Carry out only the current step. If it names a tool, "
+    "call that tool. If it refers to earlier steps, take what you need from COMPLETED "
+    "STEPS (e.g. the exact lines or paths they found). If it needs no tool, just do it. "
+    "Then reply with a short factual result of the step, including any information "
+    "found and any error a tool returned. Paths are relative to the workspace root."
 )
 
 RESPONDER_PROMPT = (
     "You are the RESPONDER of a file-manager agent. Given the user's task and the results "
     "of each executed step, reply to the user in one or two sentences with what was done "
-    "or the answer they asked for. Only report what the step results show."
+    "or the answer they asked for. Only report what the step results show. If any part "
+    "of the task could not be done, say so plainly and why."
 )
 
 
@@ -158,10 +232,16 @@ class PlanExecuteState(TypedDict):
 # ===========================================================================
 # 4. The graph
 # ===========================================================================
-def build_agent(llm=None):
-    """Build and compile the plan-and-execute agent. Pass `llm` to swap the model."""
-    llm = llm or ChatOpenAI(model="gpt-4o-mini", temperature=0)
-    planner_llm = llm.with_structured_output(Plan)
+def build_agent(llm=None, planner_llm=None):
+    """Build and compile the plan-and-execute agent.
+
+    llm         : model for the executor and responder (default: WORKER_MODEL)
+    planner_llm : model for the planner (default: PLANNER_MODEL)
+    """
+    llm = llm or ChatOpenAI(model=WORKER_MODEL, temperature=0)
+    # GPT-5.x models are reasoning models: they take reasoning_effort, not temperature.
+    planner_llm = planner_llm or ChatOpenAI(model=PLANNER_MODEL, reasoning_effort="low")
+    structured_planner = planner_llm.with_structured_output(Plan)
     step_executor = create_agent(llm, tools=TOOLS, system_prompt=EXECUTOR_PROMPT,
                                  name="step_executor")
 
@@ -169,7 +249,7 @@ def build_agent(llm=None):
     def planner(state: PlanExecuteState):
         # Look at the workspace NOW, so the plan uses real names instead of guesses.
         listing = "\n".join(list_workspace())
-        plan = planner_llm.invoke([
+        plan = structured_planner.invoke([
             SystemMessage(PLANNER_PROMPT),
             HumanMessage(f"TASK: {state['task']}\n\nCURRENT WORKSPACE:\n{listing}"),
         ])
@@ -213,10 +293,11 @@ def build_agent(llm=None):
     return graph.compile(name="file_manager_agent")
 
 
-def run_agent(agent, task: str, callbacks=None) -> str:
-    """Run one task and return the agent's final answer."""
+def run_agent(agent, task: str, callbacks=None, full: bool = False):
+    """Run one task. Returns the final answer, or with full=True the whole final
+    state (task, plan, past_steps, response)."""
     result = agent.invoke(
         {"task": task, "past_steps": []},
         config={"callbacks": callbacks or [], "recursion_limit": 40},
     )
-    return result["response"]
+    return result if full else result["response"]

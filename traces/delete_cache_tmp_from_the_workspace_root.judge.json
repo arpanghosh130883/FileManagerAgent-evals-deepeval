@@ -9,11 +9,11 @@
   "output": {
     "task": "Delete cache.tmp from the workspace root",
     "plan": [
-      "Call delete_file with source='cache.tmp'"
+      "Call delete_file with path='cache.tmp'"
     ],
     "past_steps": [
       [
-        "Call delete_file with source='cache.tmp'",
+        "Call delete_file with path='cache.tmp'",
         "The file `cache.tmp` has been successfully deleted from the workspace root."
       ]
     ],
@@ -26,7 +26,7 @@
       "integration": "LangChain",
       "output": {
         "plan": [
-          "Call delete_file with source='cache.tmp'"
+          "Call delete_file with path='cache.tmp'"
         ]
       },
       "children": [
@@ -39,13 +39,13 @@
               "name": "ChatOpenAI",
               "type": "llm",
               "integration": "LangChain",
-              "model": "gpt-4o-mini-2024-07-18",
+              "model": "gpt-5.6-terra",
               "provider": "openai",
-              "input_token_count": 484.0,
-              "output_token_count": 14.0,
+              "input_token_count": 1174.0,
+              "output_token_count": 20.0,
               "output": {
                 "role": "AI",
-                "content": "{\"steps\":[\"Call delete_file with source='cache.tmp'\"]}",
+                "content": "{\"steps\":[\"Call delete_file with path='cache.tmp'\"]}",
                 "tool_calls": []
               },
               "children": []
@@ -67,7 +67,7 @@
       "output": {
         "past_steps": [
           [
-            "Call delete_file with source='cache.tmp'",
+            "Call delete_file with path='cache.tmp'",
             "The file `cache.tmp` has been successfully deleted from the workspace root."
           ]
         ]
@@ -89,7 +89,7 @@
                   "integration": "LangChain",
                   "model": "gpt-4o-mini-2024-07-18",
                   "provider": "openai",
-                  "input_token_count": 311.0,
+                  "input_token_count": 512.0,
                   "output_token_count": 15.0,
                   "output": {
                     "role": "AI",
@@ -100,7 +100,7 @@
                         "args": {
                           "path": "cache.tmp"
                         },
-                        "id": "call_3O2tYhLhx1RpWjJRjey3ERfa"
+                        "id": "call_ouIFlCuC5R0XC5cq9U4q0vGh"
                       }
                     ]
                   },
@@ -124,8 +124,8 @@
                     "response_metadata": {},
                     "type": "tool",
                     "name": "delete_file",
-                    "id": "e2983b84-1aeb-43c3-84dd-4c792a7309e1",
-                    "tool_call_id": "call_3O2tYhLhx1RpWjJRjey3ERfa",
+                    "id": "8fdea034-6264-48cc-9926-ece3fca639fd",
+                    "tool_call_id": "call_ouIFlCuC5R0XC5cq9U4q0vGh",
                     "artifact": null,
                     "status": "success"
                   },
@@ -148,8 +148,8 @@
                     "response_metadata": {},
                     "type": "tool",
                     "name": "delete_file",
-                    "id": "e2983b84-1aeb-43c3-84dd-4c792a7309e1",
-                    "tool_call_id": "call_3O2tYhLhx1RpWjJRjey3ERfa",
+                    "id": "8fdea034-6264-48cc-9926-ece3fca639fd",
+                    "tool_call_id": "call_ouIFlCuC5R0XC5cq9U4q0vGh",
                     "artifact": null,
                     "status": "success"
                   },
@@ -168,7 +168,7 @@
                   "integration": "LangChain",
                   "model": "gpt-4o-mini-2024-07-18",
                   "provider": "openai",
-                  "input_token_count": 340.0,
+                  "input_token_count": 541.0,
                   "output_token_count": 16.0,
                   "output": {
                     "role": "AI",
@@ -197,7 +197,7 @@
           "integration": "LangChain",
           "model": "gpt-4o-mini-2024-07-18",
           "provider": "openai",
-          "input_token_count": 101.0,
+          "input_token_count": 118.0,
           "output_token_count": 15.0,
           "output": {
             "role": "AI",

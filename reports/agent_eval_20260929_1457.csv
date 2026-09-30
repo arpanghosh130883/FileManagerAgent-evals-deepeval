@@ -1,0 +1,2 @@
+#,difficulty,task,task_completion_score,task_completion_status,task_completion_reason,plan_quality_score,plan_quality_status,plan_quality_reason,plan_quality_(sees_workspace)_score,plan_quality_(sees_workspace)_status,plan_quality_(sees_workspace)_reason
+1,easy,"Create a file named shopping.txt with the content 'eggs, bread, milk'",,NOT SCORED,The run stopped before this task was graded.,,NOT SCORED,The run stopped before this task was graded.,,NOT SCORED,The run stopped before this task was graded.

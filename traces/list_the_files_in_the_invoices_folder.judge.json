@@ -9,11 +9,16 @@
   "output": {
     "task": "List the files in the invoices folder",
     "plan": [
-      "Call list_files with folder='invoices'"
+      "Call list_files with folder='invoices'",
+      "Tell the user the files returned in step 1."
     ],
     "past_steps": [
       [
         "Call list_files with folder='invoices'",
+        "The files in the invoices folder are:\n- invoice_2023_11.pdf\n- invoice_2023_12.pdf\n- invoice_2024_01.pdf\n- invoice_2024_02.pdf"
+      ],
+      [
+        "Tell the user the files returned in step 1.",
         "The files in the invoices folder are:\n- invoice_2023_11.pdf\n- invoice_2023_12.pdf\n- invoice_2024_01.pdf\n- invoice_2024_02.pdf"
       ]
     ],
@@ -24,11 +29,7 @@
       "name": "planner",
       "type": "base",
       "integration": "LangChain",
-      "output": {
-        "plan": [
-          "Call list_files with folder='invoices'"
-        ]
-      },
+      "output": "```json\n{\n  \"score\": 8,\n  \"reason\": \"The plan correctly uses the list_files tool to list the contents of the 'invoices' folder, which aligns with the task. However, the second step is unnecessary as the responder will automatically report the results of step 1. The plan does not skip any files or use any non-existent names, and it uses the tool appropriately.\"\n}\n```",
       "children": [
         {
           "name": "RunnableSequence",
@@ -39,13 +40,13 @@
               "name": "ChatOpenAI",
               "type": "llm",
               "integration": "LangChain",
-              "model": "gpt-4o-mini-2024-07-18",
+              "model": "gpt-5.6-terra",
               "provider": "openai",
-              "input_token_count": 484.0,
-              "output_token_count": 14.0,
+              "input_token_count": 1174.0,
+              "output_token_count": 32.0,
               "output": {
                 "role": "AI",
-                "content": "{\"steps\":[\"Call list_files with folder='invoices'\"]}",
+                "content": "{\"steps\":[\"Call list_files with folder='invoices'\",\"Tell the user the files returned in step 1.\"]}",
                 "tool_calls": []
               },
               "children": []
@@ -89,7 +90,7 @@
                   "integration": "LangChain",
                   "model": "gpt-4o-mini-2024-07-18",
                   "provider": "openai",
-                  "input_token_count": 311.0,
+                  "input_token_count": 525.0,
                   "output_token_count": 15.0,
                   "output": {
                     "role": "AI",
@@ -100,7 +101,7 @@
                         "args": {
                           "folder": "invoices"
                         },
-                        "id": "call_6OKnGlagsdqMDJAjiZmojuna"
+                        "id": "call_y0vwagjIGExNRYH5DNi9LJcq"
                       }
                     ]
                   },
@@ -124,8 +125,8 @@
                     "response_metadata": {},
                     "type": "tool",
                     "name": "list_files",
-                    "id": "c56b8ed6-ee92-4029-9e20-b4bd45a90eb7",
-                    "tool_call_id": "call_6OKnGlagsdqMDJAjiZmojuna",
+                    "id": "091b9b3d-5dac-4d12-816e-94e9fde32870",
+                    "tool_call_id": "call_y0vwagjIGExNRYH5DNi9LJcq",
                     "artifact": null,
                     "status": "success"
                   },
@@ -148,8 +149,8 @@
                     "response_metadata": {},
                     "type": "tool",
                     "name": "list_files",
-                    "id": "c56b8ed6-ee92-4029-9e20-b4bd45a90eb7",
-                    "tool_call_id": "call_6OKnGlagsdqMDJAjiZmojuna",
+                    "id": "091b9b3d-5dac-4d12-816e-94e9fde32870",
+                    "tool_call_id": "call_y0vwagjIGExNRYH5DNi9LJcq",
                     "artifact": null,
                     "status": "success"
                   },
@@ -168,7 +169,51 @@
                   "integration": "LangChain",
                   "model": "gpt-4o-mini-2024-07-18",
                   "provider": "openai",
-                  "input_token_count": 373.0,
+                  "input_token_count": 587.0,
+                  "output_token_count": 44.0,
+                  "output": {
+                    "role": "AI",
+                    "content": "The files in the invoices folder are:\n- invoice_2023_11.pdf\n- invoice_2023_12.pdf\n- invoice_2024_01.pdf\n- invoice_2024_02.pdf",
+                    "tool_calls": []
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "executor",
+      "type": "base",
+      "integration": "LangChain",
+      "output": {
+        "past_steps": [
+          [
+            "Tell the user the files returned in step 1.",
+            "The files in the invoices folder are:\n- invoice_2023_11.pdf\n- invoice_2023_12.pdf\n- invoice_2024_01.pdf\n- invoice_2024_02.pdf"
+          ]
+        ]
+      },
+      "children": [
+        {
+          "name": "step_executor",
+          "type": "base",
+          "integration": "LangChain",
+          "children": [
+            {
+              "name": "model",
+              "type": "base",
+              "integration": "LangChain",
+              "children": [
+                {
+                  "name": "ChatOpenAI",
+                  "type": "llm",
+                  "integration": "LangChain",
+                  "model": "gpt-4o-mini-2024-07-18",
+                  "provider": "openai",
+                  "input_token_count": 579.0,
                   "output_token_count": 44.0,
                   "output": {
                     "role": "AI",
@@ -197,7 +242,7 @@
           "integration": "LangChain",
           "model": "gpt-4o-mini-2024-07-18",
           "provider": "openai",
-          "input_token_count": 129.0,
+          "input_token_count": 202.0,
           "output_token_count": 41.0,
           "output": {
             "role": "AI",

@@ -9,42 +9,22 @@
   "output": {
     "task": "Delete the logs folder completely",
     "plan": [
-      "Call delete_file with source='logs/old/debug.log'",
-      "Call delete_file with source='logs/old/'",
-      "Call delete_file with source='logs/error.log'",
-      "Call delete_file with source='logs/app.log'",
-      "Call delete_file with source='logs/'"
+      "Call delete_folder with path='logs'"
     ],
     "past_steps": [
       [
-        "Call delete_file with source='logs/old/debug.log'",
-        "The file `logs/old/debug.log` has been deleted successfully."
-      ],
-      [
-        "Call delete_file with source='logs/old/'",
-        "The folder `logs/old/` was not found and could not be deleted."
-      ],
-      [
-        "Call delete_file with source='logs/error.log'",
-        "The file `logs/error.log` has been deleted successfully."
-      ],
-      [
-        "Call delete_file with source='logs/app.log'",
-        "The file `logs/app.log` has been deleted successfully."
-      ],
-      [
-        "Call delete_file with source='logs/'",
-        "The folder `logs/` was not found and could not be deleted."
+        "Call delete_folder with path='logs'",
+        "The logs folder has been deleted completely along with all its contents."
       ]
     ],
-    "response": "The files `logs/old/debug.log`, `logs/error.log`, and `logs/app.log` have been deleted successfully, but the folders `logs/old/` and `logs/` were not found and could not be deleted."
+    "response": "The logs folder has been deleted completely along with all its contents."
   },
   "children": [
     {
       "name": "planner",
       "type": "base",
       "integration": "LangChain",
-      "output": "{\"score\":0.75,\"reason\":\"The plan effectively outlines the steps to move the specified files, but it lacks a check to ensure that the files exist before attempting to move them. Additionally, it does not specify what to do if the files are not found, which could lead to execution failure.\"}",
+      "output": "{\n  \"verdict\": 0.5,\n  \"reason\": \"The system successfully moved q2_2024.pdf to the archive folder, but it failed to move q2_2025.pdf because it was not present. This partial success indicates that the task was only half completed.\"\n}",
       "children": [
         {
           "name": "RunnableSequence",
@@ -55,13 +35,13 @@
               "name": "ChatOpenAI",
               "type": "llm",
               "integration": "LangChain",
-              "model": "gpt-4o-mini-2024-07-18",
+              "model": "gpt-5.6-terra",
               "provider": "openai",
-              "input_token_count": 482.0,
-              "output_token_count": 59.0,
+              "input_token_count": 1172.0,
+              "output_token_count": 19.0,
               "output": {
                 "role": "AI",
-                "content": "{\"steps\":[\"Call delete_file with source='logs/old/debug.log'\",\"Call delete_file with source='logs/old/'\",\"Call delete_file with source='logs/error.log'\",\"Call delete_file with source='logs/app.log'\",\"Call delete_file with source='logs/'\"]}",
+                "content": "{\"steps\":[\"Call delete_folder with path='logs'\"]}",
                 "tool_calls": []
               },
               "children": []
@@ -83,8 +63,8 @@
       "output": {
         "past_steps": [
           [
-            "Call delete_file with source='logs/old/debug.log'",
-            "The file `logs/old/debug.log` has been deleted successfully."
+            "Call delete_folder with path='logs'",
+            "The logs folder has been deleted completely along with all its contents."
           ]
         ]
       },
@@ -105,18 +85,18 @@
                   "integration": "LangChain",
                   "model": "gpt-4o-mini-2024-07-18",
                   "provider": "openai",
-                  "input_token_count": 362.0,
-                  "output_token_count": 18.0,
+                  "input_token_count": 508.0,
+                  "output_token_count": 14.0,
                   "output": {
                     "role": "AI",
                     "content": "",
                     "tool_calls": [
                       {
-                        "name": "delete_file",
+                        "name": "delete_folder",
                         "args": {
-                          "path": "logs/old/debug.log"
+                          "path": "logs"
                         },
-                        "id": "call_v3xCQffnA3uafi4ZarIRBgIO"
+                        "id": "call_qEKSzufjacFxNP4xiEg2CFvJ"
                       }
                     ]
                   },
@@ -130,42 +110,42 @@
               "integration": "LangChain",
               "tools_called": [
                 {
-                  "name": "delete_file",
+                  "name": "delete_folder",
                   "type": "FUNCTION",
                   "description": null,
                   "reasoning": null,
                   "output": {
-                    "content": "Deleted logs/old/debug.log",
+                    "content": "Deleted folder logs/ and everything in it",
                     "additional_kwargs": {},
                     "response_metadata": {},
                     "type": "tool",
-                    "name": "delete_file",
-                    "id": "06a87129-119e-4ddc-aedc-4634f86ad077",
-                    "tool_call_id": "call_v3xCQffnA3uafi4ZarIRBgIO",
+                    "name": "delete_folder",
+                    "id": "f839b718-8ae5-4575-84f3-1071de3f56b6",
+                    "tool_call_id": "call_qEKSzufjacFxNP4xiEg2CFvJ",
                     "artifact": null,
                     "status": "success"
                   },
                   "input_parameters": {
-                    "path": "logs/old/debug.log"
+                    "path": "logs"
                   }
                 }
               ],
               "children": [
                 {
-                  "name": "delete_file",
+                  "name": "delete_folder",
                   "type": "tool",
                   "integration": "LangChain",
                   "input": {
-                    "path": "logs/old/debug.log"
+                    "path": "logs"
                   },
                   "output": {
-                    "content": "Deleted logs/old/debug.log",
+                    "content": "Deleted folder logs/ and everything in it",
                     "additional_kwargs": {},
                     "response_metadata": {},
                     "type": "tool",
-                    "name": "delete_file",
-                    "id": "06a87129-119e-4ddc-aedc-4634f86ad077",
-                    "tool_call_id": "call_v3xCQffnA3uafi4ZarIRBgIO",
+                    "name": "delete_folder",
+                    "id": "f839b718-8ae5-4575-84f3-1071de3f56b6",
+                    "tool_call_id": "call_qEKSzufjacFxNP4xiEg2CFvJ",
                     "artifact": null,
                     "status": "success"
                   },
@@ -184,503 +164,11 @@
                   "integration": "LangChain",
                   "model": "gpt-4o-mini-2024-07-18",
                   "provider": "openai",
-                  "input_token_count": 397.0,
-                  "output_token_count": 15.0,
+                  "input_token_count": 541.0,
+                  "output_token_count": 14.0,
                   "output": {
                     "role": "AI",
-                    "content": "The file `logs/old/debug.log` has been deleted successfully.",
-                    "tool_calls": []
-                  },
-                  "children": []
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "executor",
-      "type": "base",
-      "integration": "LangChain",
-      "output": {
-        "past_steps": [
-          [
-            "Call delete_file with source='logs/old/'",
-            "The folder `logs/old/` was not found and could not be deleted."
-          ]
-        ]
-      },
-      "children": [
-        {
-          "name": "step_executor",
-          "type": "base",
-          "integration": "LangChain",
-          "children": [
-            {
-              "name": "model",
-              "type": "base",
-              "integration": "LangChain",
-              "children": [
-                {
-                  "name": "ChatOpenAI",
-                  "type": "llm",
-                  "integration": "LangChain",
-                  "model": "gpt-4o-mini-2024-07-18",
-                  "provider": "openai",
-                  "input_token_count": 385.0,
-                  "output_token_count": 17.0,
-                  "output": {
-                    "role": "AI",
-                    "content": "",
-                    "tool_calls": [
-                      {
-                        "name": "delete_file",
-                        "args": {
-                          "path": "logs/old/"
-                        },
-                        "id": "call_EqppzBaxrJ92uEONgmh69AiL"
-                      }
-                    ]
-                  },
-                  "children": []
-                }
-              ]
-            },
-            {
-              "name": "tools",
-              "type": "base",
-              "integration": "LangChain",
-              "tools_called": [
-                {
-                  "name": "delete_file",
-                  "type": "FUNCTION",
-                  "description": null,
-                  "reasoning": null,
-                  "output": {
-                    "content": "Error: file 'logs/old/' not found",
-                    "additional_kwargs": {},
-                    "response_metadata": {},
-                    "type": "tool",
-                    "name": "delete_file",
-                    "id": "dda229f0-9949-4da4-9f97-7522e53f0a3f",
-                    "tool_call_id": "call_EqppzBaxrJ92uEONgmh69AiL",
-                    "artifact": null,
-                    "status": "success"
-                  },
-                  "input_parameters": {
-                    "path": "logs/old/"
-                  }
-                }
-              ],
-              "children": [
-                {
-                  "name": "delete_file",
-                  "type": "tool",
-                  "integration": "LangChain",
-                  "input": {
-                    "path": "logs/old/"
-                  },
-                  "output": {
-                    "content": "Error: file 'logs/old/' not found",
-                    "additional_kwargs": {},
-                    "response_metadata": {},
-                    "type": "tool",
-                    "name": "delete_file",
-                    "id": "dda229f0-9949-4da4-9f97-7522e53f0a3f",
-                    "tool_call_id": "call_EqppzBaxrJ92uEONgmh69AiL",
-                    "artifact": null,
-                    "status": "success"
-                  },
-                  "children": []
-                }
-              ]
-            },
-            {
-              "name": "model",
-              "type": "base",
-              "integration": "LangChain",
-              "children": [
-                {
-                  "name": "ChatOpenAI",
-                  "type": "llm",
-                  "integration": "LangChain",
-                  "model": "gpt-4o-mini-2024-07-18",
-                  "provider": "openai",
-                  "input_token_count": 423.0,
-                  "output_token_count": 18.0,
-                  "output": {
-                    "role": "AI",
-                    "content": "The folder `logs/old/` was not found and could not be deleted.",
-                    "tool_calls": []
-                  },
-                  "children": []
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "executor",
-      "type": "base",
-      "integration": "LangChain",
-      "output": {
-        "past_steps": [
-          [
-            "Call delete_file with source='logs/error.log'",
-            "The file `logs/error.log` has been deleted successfully."
-          ]
-        ]
-      },
-      "children": [
-        {
-          "name": "step_executor",
-          "type": "base",
-          "integration": "LangChain",
-          "children": [
-            {
-              "name": "model",
-              "type": "base",
-              "integration": "LangChain",
-              "children": [
-                {
-                  "name": "ChatOpenAI",
-                  "type": "llm",
-                  "integration": "LangChain",
-                  "model": "gpt-4o-mini-2024-07-18",
-                  "provider": "openai",
-                  "input_token_count": 415.0,
-                  "output_token_count": 16.0,
-                  "output": {
-                    "role": "AI",
-                    "content": "",
-                    "tool_calls": [
-                      {
-                        "name": "delete_file",
-                        "args": {
-                          "path": "logs/error.log"
-                        },
-                        "id": "call_8yvCaeBwJeHuN8HLM9ZC7iTU"
-                      }
-                    ]
-                  },
-                  "children": []
-                }
-              ]
-            },
-            {
-              "name": "tools",
-              "type": "base",
-              "integration": "LangChain",
-              "tools_called": [
-                {
-                  "name": "delete_file",
-                  "type": "FUNCTION",
-                  "description": null,
-                  "reasoning": null,
-                  "output": {
-                    "content": "Deleted logs/error.log",
-                    "additional_kwargs": {},
-                    "response_metadata": {},
-                    "type": "tool",
-                    "name": "delete_file",
-                    "id": "4536936d-b5e7-4b29-a080-50d5bfac0bea",
-                    "tool_call_id": "call_8yvCaeBwJeHuN8HLM9ZC7iTU",
-                    "artifact": null,
-                    "status": "success"
-                  },
-                  "input_parameters": {
-                    "path": "logs/error.log"
-                  }
-                }
-              ],
-              "children": [
-                {
-                  "name": "delete_file",
-                  "type": "tool",
-                  "integration": "LangChain",
-                  "input": {
-                    "path": "logs/error.log"
-                  },
-                  "output": {
-                    "content": "Deleted logs/error.log",
-                    "additional_kwargs": {},
-                    "response_metadata": {},
-                    "type": "tool",
-                    "name": "delete_file",
-                    "id": "4536936d-b5e7-4b29-a080-50d5bfac0bea",
-                    "tool_call_id": "call_8yvCaeBwJeHuN8HLM9ZC7iTU",
-                    "artifact": null,
-                    "status": "success"
-                  },
-                  "children": []
-                }
-              ]
-            },
-            {
-              "name": "model",
-              "type": "base",
-              "integration": "LangChain",
-              "children": [
-                {
-                  "name": "ChatOpenAI",
-                  "type": "llm",
-                  "integration": "LangChain",
-                  "model": "gpt-4o-mini-2024-07-18",
-                  "provider": "openai",
-                  "input_token_count": 446.0,
-                  "output_token_count": 13.0,
-                  "output": {
-                    "role": "AI",
-                    "content": "The file `logs/error.log` has been deleted successfully.",
-                    "tool_calls": []
-                  },
-                  "children": []
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "executor",
-      "type": "base",
-      "integration": "LangChain",
-      "output": {
-        "past_steps": [
-          [
-            "Call delete_file with source='logs/app.log'",
-            "The file `logs/app.log` has been deleted successfully."
-          ]
-        ]
-      },
-      "children": [
-        {
-          "name": "step_executor",
-          "type": "base",
-          "integration": "LangChain",
-          "children": [
-            {
-              "name": "model",
-              "type": "base",
-              "integration": "LangChain",
-              "children": [
-                {
-                  "name": "ChatOpenAI",
-                  "type": "llm",
-                  "integration": "LangChain",
-                  "model": "gpt-4o-mini-2024-07-18",
-                  "provider": "openai",
-                  "input_token_count": 440.0,
-                  "output_token_count": 16.0,
-                  "output": {
-                    "role": "AI",
-                    "content": "",
-                    "tool_calls": [
-                      {
-                        "name": "delete_file",
-                        "args": {
-                          "path": "logs/app.log"
-                        },
-                        "id": "call_2oPihNJAsiGkpokaId2FoTp5"
-                      }
-                    ]
-                  },
-                  "children": []
-                }
-              ]
-            },
-            {
-              "name": "tools",
-              "type": "base",
-              "integration": "LangChain",
-              "tools_called": [
-                {
-                  "name": "delete_file",
-                  "type": "FUNCTION",
-                  "description": null,
-                  "reasoning": null,
-                  "output": {
-                    "content": "Deleted logs/app.log",
-                    "additional_kwargs": {},
-                    "response_metadata": {},
-                    "type": "tool",
-                    "name": "delete_file",
-                    "id": "f8ea4422-9cb0-4e88-ad8e-42b08a8eaf15",
-                    "tool_call_id": "call_2oPihNJAsiGkpokaId2FoTp5",
-                    "artifact": null,
-                    "status": "success"
-                  },
-                  "input_parameters": {
-                    "path": "logs/app.log"
-                  }
-                }
-              ],
-              "children": [
-                {
-                  "name": "delete_file",
-                  "type": "tool",
-                  "integration": "LangChain",
-                  "input": {
-                    "path": "logs/app.log"
-                  },
-                  "output": {
-                    "content": "Deleted logs/app.log",
-                    "additional_kwargs": {},
-                    "response_metadata": {},
-                    "type": "tool",
-                    "name": "delete_file",
-                    "id": "f8ea4422-9cb0-4e88-ad8e-42b08a8eaf15",
-                    "tool_call_id": "call_2oPihNJAsiGkpokaId2FoTp5",
-                    "artifact": null,
-                    "status": "success"
-                  },
-                  "children": []
-                }
-              ]
-            },
-            {
-              "name": "model",
-              "type": "base",
-              "integration": "LangChain",
-              "children": [
-                {
-                  "name": "ChatOpenAI",
-                  "type": "llm",
-                  "integration": "LangChain",
-                  "model": "gpt-4o-mini-2024-07-18",
-                  "provider": "openai",
-                  "input_token_count": 471.0,
-                  "output_token_count": 13.0,
-                  "output": {
-                    "role": "AI",
-                    "content": "The file `logs/app.log` has been deleted successfully.",
-                    "tool_calls": []
-                  },
-                  "children": []
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "executor",
-      "type": "base",
-      "integration": "LangChain",
-      "output": {
-        "past_steps": [
-          [
-            "Call delete_file with source='logs/'",
-            "The folder `logs/` was not found and could not be deleted."
-          ]
-        ]
-      },
-      "children": [
-        {
-          "name": "step_executor",
-          "type": "base",
-          "integration": "LangChain",
-          "children": [
-            {
-              "name": "model",
-              "type": "base",
-              "integration": "LangChain",
-              "children": [
-                {
-                  "name": "ChatOpenAI",
-                  "type": "llm",
-                  "integration": "LangChain",
-                  "model": "gpt-4o-mini-2024-07-18",
-                  "provider": "openai",
-                  "input_token_count": 463.0,
-                  "output_token_count": 15.0,
-                  "output": {
-                    "role": "AI",
-                    "content": "",
-                    "tool_calls": [
-                      {
-                        "name": "delete_file",
-                        "args": {
-                          "path": "logs/"
-                        },
-                        "id": "call_5BuKcRNztnqOZGYvK7OuGJ3o"
-                      }
-                    ]
-                  },
-                  "children": []
-                }
-              ]
-            },
-            {
-              "name": "tools",
-              "type": "base",
-              "integration": "LangChain",
-              "tools_called": [
-                {
-                  "name": "delete_file",
-                  "type": "FUNCTION",
-                  "description": null,
-                  "reasoning": null,
-                  "output": {
-                    "content": "Error: file 'logs/' not found",
-                    "additional_kwargs": {},
-                    "response_metadata": {},
-                    "type": "tool",
-                    "name": "delete_file",
-                    "id": "71bb7a33-d933-42ed-8673-46fd2e2479bb",
-                    "tool_call_id": "call_5BuKcRNztnqOZGYvK7OuGJ3o",
-                    "artifact": null,
-                    "status": "success"
-                  },
-                  "input_parameters": {
-                    "path": "logs/"
-                  }
-                }
-              ],
-              "children": [
-                {
-                  "name": "delete_file",
-                  "type": "tool",
-                  "integration": "LangChain",
-                  "input": {
-                    "path": "logs/"
-                  },
-                  "output": {
-                    "content": "Error: file 'logs/' not found",
-                    "additional_kwargs": {},
-                    "response_metadata": {},
-                    "type": "tool",
-                    "name": "delete_file",
-                    "id": "71bb7a33-d933-42ed-8673-46fd2e2479bb",
-                    "tool_call_id": "call_5BuKcRNztnqOZGYvK7OuGJ3o",
-                    "artifact": null,
-                    "status": "success"
-                  },
-                  "children": []
-                }
-              ]
-            },
-            {
-              "name": "model",
-              "type": "base",
-              "integration": "LangChain",
-              "children": [
-                {
-                  "name": "ChatOpenAI",
-                  "type": "llm",
-                  "integration": "LangChain",
-                  "model": "gpt-4o-mini-2024-07-18",
-                  "provider": "openai",
-                  "input_token_count": 497.0,
-                  "output_token_count": 16.0,
-                  "output": {
-                    "role": "AI",
-                    "content": "The folder `logs/` was not found and could not be deleted.",
+                    "content": "The logs folder has been deleted completely along with all its contents.",
                     "tool_calls": []
                   },
                   "children": []
@@ -696,7 +184,7 @@
       "type": "base",
       "integration": "LangChain",
       "output": {
-        "response": "The files `logs/old/debug.log`, `logs/error.log`, and `logs/app.log` have been deleted successfully, but the folders `logs/old/` and `logs/` were not found and could not be deleted."
+        "response": "The logs folder has been deleted completely along with all its contents."
       },
       "children": [
         {
@@ -705,11 +193,11 @@
           "integration": "LangChain",
           "model": "gpt-4o-mini-2024-07-18",
           "provider": "openai",
-          "input_token_count": 201.0,
-          "output_token_count": 48.0,
+          "input_token_count": 113.0,
+          "output_token_count": 13.0,
           "output": {
             "role": "AI",
-            "content": "The files `logs/old/debug.log`, `logs/error.log`, and `logs/app.log` have been deleted successfully, but the folders `logs/old/` and `logs/` were not found and could not be deleted.",
+            "content": "The logs folder has been deleted completely along with all its contents.",
             "tool_calls": []
           },
           "children": []
