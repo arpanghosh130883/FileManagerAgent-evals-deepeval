@@ -1,0 +1,37 @@
+[project]
+name = "file-manager-agent"
+version = "0.1.0"
+description = "A LangGraph plan-and-execute File Manager agent, evaluated with DeepEval"
+readme = "README.md"
+requires-python = ">=3.11"
+# Pinned to the versions the evals in evals/results/ were run with: a newer
+# deepeval or LangChain can change judge prompts or trace shapes, and so scores.
+dependencies = [
+    "deepeval==4.1.5",
+    "langchain==1.2.0",
+    "langchain-openai==1.1.5",
+    "langgraph==1.0.5",
+    "python-dotenv==1.1.1",
+]
+
+# Not imported directly, but they shape every model call and trace: keep them at
+# the same versions too. (A newer langgraph-prebuilt breaks langgraph 1.0.5.)
+[tool.uv]
+constraint-dependencies = [
+    "openai==2.7.2",
+    "langchain-core==1.5.2",
+    "langgraph-checkpoint==3.0.1",
+    "langgraph-prebuilt==1.0.2",
+    "langgraph-sdk==0.3.0",
+    "langsmith==0.4.20",
+    "tiktoken==0.12.0",
+]
+
+# Build src/file_manager_agent as a package, so `uv sync` installs it (editable)
+# and `from file_manager_agent.agent import ...` works from main.py and evals/.
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/file_manager_agent"]
