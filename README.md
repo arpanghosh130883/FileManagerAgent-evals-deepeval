@@ -2,13 +2,14 @@
 
 Evaluating a **LangGraph file-manager agent** with [DeepEval](https://github.com/confident-ai/deepeval).
 
-The agent takes plain-English requests ("Move budget.xlsx into the archive folder") and carries them out inside a sandboxed `data/workspace/` folder. Each run is scored three ways:
+The agent takes plain-English requests ("Move budget.xlsx into the archive folder") and carries them out inside a sandboxed `data/workspace/` folder. Each run is scored four ways:
 
 - **Task Completion** (DeepEval): did the task actually get done? This judges the outcome from the run's trace.
 - **Plan Quality** (DeepEval): was the agent's plan any good? This judges the plan from the trace, but never sees the workspace or the tools.
 - **Plan Quality (sees workspace)** (our own G-Eval judge in `evals/plan_judge.py`): grades the exact plan against the workspace listing the planner saw and the tool list.
+- **Plan Adherence** (DeepEval): did the executor follow the plan? The judge finds the plan in the trace, then checks that each step was carried out, in order, with nothing extra.
 
-Scoring the same run on the outcome and on the plan shows **where** a failure comes from:
+Scoring the same run on the outcome and on the plan shows **where** a failure comes from (Plan Adherence then tells you whether an "execution problem" means the executor strayed from the plan):
 
 | | Task done | Task failed |
 |---|---|---|
@@ -25,8 +26,8 @@ START ──► planner ──► executor ──(steps left?)──► executor
                           └──(all steps done)──► responder ──► END
 ```
 
-- **planner** (`gpt-5.6-terra`): sees the current workspace listing and writes a numbered plan (structured output). The plan is its own step in the trace, which is what Plan Quality reads.
-- **executor** (`gpt-4o-mini`): carries out one plan step per visit, using a small tool-calling sub-agent.
+- **planner** (`gpt-5.6-terra`): sees the current workspace listing and writes a numbered plan (structured output). The plan is its own step in the trace, which is what Plan Quality and Plan Adherence read.
+- **executor** (`gpt-4o-mini`): carries out one plan step per visit, using a small tool-calling sub-agent. It sees only the current step and the results of earlier steps, not the rest of the plan. When it could see later steps it kept doing them early, which breaks the plan.
 - **responder** (`gpt-4o-mini`): writes the final answer from the step results.
 
 Tools: `list_files`, `read_file`, `create_file`, `create_folder`, `move_file`, `delete_file`, `delete_folder`. Every path goes through `safe_path()` in `sandbox.py`, so the agent can't touch anything outside `data/workspace/`.
@@ -40,7 +41,7 @@ Tools: `list_files`, `read_file`, `create_file`, `create_folder`, `move_file`, `
 │   ├── agent.py                #   graph, prompts, tools, run_agent()
 │   └── sandbox.py              #   the 20 starting files, reset_sandbox(), safe_path()
 ├── evals/                      # all evaluation code, run as modules: python -m evals.<name>
-│   ├── eval_agent.py           #   main eval: Task Completion + both Plan Quality scores
+│   ├── eval_agent.py           #   main eval: Task Completion, both Plan Quality scores, Plan Adherence
 │   ├── eval_task_completion.py #   simpler eval: Task Completion only
 │   ├── plan_judge.py           #   our plan judge that sees the workspace and tools
 │   ├── check_plan_judge.py     #   sanity check: does the plan judge tell bad plans from good?
@@ -87,7 +88,7 @@ Reset the workspace and print its layout (no API calls):
 uv run python -m file_manager_agent.sandbox
 ```
 
-Run the full eval (Task Completion + DeepEval Plan Quality + our plan judge):
+Run the full eval (Task Completion + DeepEval Plan Quality + our plan judge + Plan Adherence):
 
 ```bash
 uv run python -m evals.eval_agent
@@ -126,6 +127,12 @@ DeepEval's `PlanQualityMetric` grades a plan from the task and a paraphrase of t
 
 `evals/plan_judge.py` is a G-Eval metric (judge: `gpt-4o`) that gets the task, the plan word for word, the workspace listing, the tool list, and a code-computed list of files the plan never mentions. `evals/check_plan_judge.py` checks that it FAILs known-bad plans and PASSes known-good ones before you trust its scores.
 
+## Reading Plan Adherence
+
+Plan Adherence grades the executor, not the planner: a bad plan followed exactly still scores 1.0. Read it together with the plan scores. A low Plan Adherence on a task that failed points at the executor; a high one points back at the plan.
+
+One trap: if the judge can't find a plan in the trace, DeepEval gives **1.0** with the reason *"There were no plans to evaluate..."*. That score checked nothing, so read the reason before trusting a 1.0.
+
 ## Why `slim_trace.py`?
 
 DeepEval's LangChain `CallbackHandler` saves each LangGraph step with its full input and output. In a plan-and-execute graph that repeats a lot: the whole graph state goes into every node, and the whole message history goes into every LLM call. One run can come to about 50k tokens, which can be more than an OpenAI rate limit allows in one request.
@@ -134,12 +141,13 @@ DeepEval's LangChain `CallbackHandler` saves each LangGraph step with its full i
 
 ## Sample results
 
-From the 30 Sep 2026 10:58 run (trace judges: `gpt-4o-mini`, plan judge: `gpt-4o`, threshold 0.7):
+From `evals/results/reports/agent_eval_20260930_2005.md` (Task Completion and Plan Quality judge: `gpt-4o-mini`; Plan Adherence and our plan judge: `gpt-4o`; threshold 0.7):
 
 | Metric | Average score | Passed |
 |---|---|---|
-| Task Completion | 0.93 | 13/15 |
-| Plan Quality (DeepEval) | 0.58 | 8/15 |
-| Plan Quality (sees workspace) | 0.91 | 15/15 |
+| Task Completion | 0.91 | 13/15 |
+| Plan Quality (DeepEval) | 0.60 | 8/15 |
+| Plan Adherence | 0.97 | 14/15 |
+| Plan Quality (sees workspace) | 0.88 | 13/15 |
 
-The agent usually gets the job done. DeepEval's Plan Quality scores the plans low, but the judge that can see the workspace rates them highly: most of the gap comes from the context DeepEval's metric is missing, not from bad plans.
+The agent usually gets the job done, and the executor almost always follows the plan. DeepEval's Plan Quality scores the plans low, but the judge that can see the workspace rates them highly: most of that gap comes from the context DeepEval's metric is missing, not from bad plans.
