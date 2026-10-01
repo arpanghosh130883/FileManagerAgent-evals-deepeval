@@ -10,6 +10,10 @@ data/workspace_original/
 # ---- judge traces (overwritten by every run; reports/ next to it IS committed) ----
 evals/results/traces/
 
+# ---- Step Efficiency experiment: reports kept locally, not committed ----
+evals/results/reports/step_efficiency_20260930_2349.*
+evals/results/reports/agent_eval_20260930_2321.*
+
 # ---- DeepEval config, cache, telemetry ----
 .deepeval/
 .deepeval
