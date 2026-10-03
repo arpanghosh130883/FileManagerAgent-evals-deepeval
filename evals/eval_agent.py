@@ -1,15 +1,13 @@
 """
-Task Completion + Plan Quality + Plan Adherence eval for the LangGraph File Manager agent.
+Task Completion + Plan Quality (sees workspace) + Plan Adherence eval for the LangGraph File Manager agent.
 
 All metrics grade the SAME run: the agent runs once per golden, deepeval's
 `CallbackHandler` records one trace, and the trace metrics read that trace.
 
     Task Completion  — did the task get done?   (judges the outcome)
-    Plan Quality     — was the plan any good?    (deepeval: sees the task and a
-                                                  paraphrase of the plan only)
-    Plan Quality (sees workspace)                (evals/plan_judge.py: sees the task, the
-                                                  exact plan, the workspace listing
-                                                  and the tool list)
+    Plan Quality (sees workspace) — was the plan any good? (evals/plan_judge.py:
+                                                  sees the task, the exact plan, the
+                                                  workspace listing and the tool list)
     Plan Adherence   — did the executor follow the plan? (deepeval: finds the plan
                                                   in the trace, then checks each step
                                                   was done, in order, nothing extra)
@@ -19,6 +17,17 @@ PLAN_JUDGE_MODEL (gpt-4o), because gpt-4o-mini misreads the workspace listing.
 
 Plan Adherence gives 1.0 automatically when its judge finds no plan in the
 trace (reason: "There were no plans to evaluate..."). That 1.0 checked nothing.
+
+Two deepeval metrics are deliberately left out:
+- Plan Quality: it sees only the task and a paraphrase of the plan, never the
+  workspace or the tools, so it failed correct plans run after run. Your own
+  plan judge (above) grades the same thing with the context it needs.
+- Step Efficiency: in a plan-and-execute agent the run is as
+  lean as the plan, so Plan Quality (sees workspace) + Plan Adherence
+  cover it, and Step Efficiency counts the planner/executor/responder calls
+  as waste.
+
+Tool Correctness has its own eval: evals/eval_tool_correctness.py.
 
 Running them together shows WHERE a failure comes from:
     good plan  + task done     → working as intended
@@ -47,7 +56,10 @@ load_dotenv()
 from deepeval.dataset import EvaluationDataset
 from deepeval.evaluate.configs import AsyncConfig, DisplayConfig
 from deepeval.integrations.langchain import CallbackHandler
-from deepeval.metrics import PlanAdherenceMetric, PlanQualityMetric, TaskCompletionMetric
+from deepeval.metrics import (
+    PlanAdherenceMetric,
+    TaskCompletionMetric,
+)
 
 from evals.plan_judge import make_plan_judge, plan_test_case
 from evals.report import write_report
@@ -55,7 +67,7 @@ from evals.slim_trace import with_slim_trace
 from file_manager_agent.agent import build_agent, run_agent
 from file_manager_agent.sandbox import PROJECT_ROOT, list_workspace, reset_sandbox
 
-JUDGE_MODEL = "gpt-4o-mini"        # Task Completion, Plan Quality, Plan Adherence
+JUDGE_MODEL = "gpt-4o-mini"        # Task Completion, Plan Adherence
 PLAN_JUDGE_MODEL = "gpt-4o"        # your own plan judge (gpt-4o-mini misreads the listing)
 THRESHOLD = 0.7
 
@@ -64,12 +76,11 @@ TRACES_DIR = PROJECT_ROOT / "evals" / "results" / "traces"
 
 
 # ---------------------------------------------------------------------------
-# 1. Metrics — all three judge the slimmed trace (see slim_trace.py) and save what
+# 1. Metrics — these two judge the slimmed trace (see slim_trace.py) and save what
 #    the judge read to evals/results/traces/. The plan the agent wrote is in each trace's
 #    `planner` span.
 # ---------------------------------------------------------------------------
 SlimTaskCompletion = with_slim_trace(TaskCompletionMetric, save_dir=TRACES_DIR)
-SlimPlanQuality = with_slim_trace(PlanQualityMetric, save_dir=TRACES_DIR)
 SlimPlanAdherence = with_slim_trace(PlanAdherenceMetric, save_dir=TRACES_DIR)
 
 
@@ -83,6 +94,7 @@ dataset.add_goldens_from_json_file(str(GOLDENS_PATH))
 # ---------------------------------------------------------------------------
 # 3. Run the eval
 # ---------------------------------------------------------------------------
+
 if __name__ == "__main__":
     agent = build_agent()
 
@@ -101,19 +113,16 @@ if __name__ == "__main__":
             listing = list_workspace()
 
             # Fresh metrics for every golden — a metric stores its own score and reason.
-            # The first three grade the trace (deepeval); the last grades the plan with
-            # the workspace and tools in view (plan_judge.py).
+            # Task Completion and Plan Adherence read the trace (deepeval judges).
+            # After the run we grade the plan (plan_judge.py, sees the workspace and tools).
             trace_metrics = {
                 "Task Completion": SlimTaskCompletion(
-                    threshold=THRESHOLD, model=JUDGE_MODEL, include_reason=True, verbose_mode=True
-                ),
-                "Plan Quality": SlimPlanQuality(
                     threshold=THRESHOLD, model=JUDGE_MODEL, include_reason=True, verbose_mode=True
                 ),
                 # Did the executor do what the plan said? Keep it on gpt-4o-mini:
                 # the slim trace goes to the judge 3 times per task.
                 "Plan Adherence": SlimPlanAdherence(
-                    threshold=THRESHOLD, model='gpt-4o', include_reason=True, verbose_mode=True
+                    threshold=THRESHOLD, model=JUDGE_MODEL, include_reason=True, verbose_mode=True
                 ),
             }
             plan_judge = make_plan_judge(model=PLAN_JUDGE_MODEL, threshold=THRESHOLD)

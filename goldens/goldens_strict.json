@@ -1,0 +1,336 @@
+[
+  {
+    "input": "Rename todo.txt to tasks.txt",
+    "expected_tools": [
+      {
+        "name": "move_file",
+        "input_parameters": {
+          "source": "todo.txt",
+          "destination": "tasks.txt"
+        }
+      }
+    ],
+    "additional_metadata": {
+      "difficulty": "easy"
+    }
+  },
+  {
+    "input": "Delete the logs folder completely",
+    "expected_tools": [
+      {
+        "name": "delete_folder",
+        "input_parameters": {
+          "path": "logs"
+        }
+      }
+    ],
+    "additional_metadata": {
+      "difficulty": "easy"
+    }
+  },
+  {
+    "input": "What does notes/meeting_jan.txt say?",
+    "expected_tools": [
+      {
+        "name": "read_file",
+        "input_parameters": {
+          "path": "notes/meeting_jan.txt"
+        }
+      }
+    ],
+    "additional_metadata": {
+      "difficulty": "easy"
+    }
+  },
+  {
+    "input": "List the files in the logs folder",
+    "expected_tools": [
+      {
+        "name": "list_files",
+        "input_parameters": {
+          "folder": "logs"
+        }
+      }
+    ],
+    "additional_metadata": {
+      "difficulty": "easy"
+    }
+  },
+  {
+    "input": "Create a file named notes/todo_today.txt with the content 'call the bank'",
+    "expected_tools": [
+      {
+        "name": "create_file",
+        "input_parameters": {
+          "path": "notes/todo_today.txt",
+          "content": "call the bank"
+        }
+      }
+    ],
+    "additional_metadata": {
+      "difficulty": "easy"
+    }
+  },
+  {
+    "input": "Create a folder named backup, then move budget.xlsx into it",
+    "expected_tools": [
+      {
+        "name": "create_folder",
+        "input_parameters": {
+          "path": "backup"
+        }
+      },
+      {
+        "name": "move_file",
+        "input_parameters": {
+          "source": "budget.xlsx",
+          "destination": "backup"
+        }
+      }
+    ],
+    "additional_metadata": {
+      "difficulty": "medium"
+    }
+  },
+  {
+    "input": "Move reports/q1_2024.pdf into the archive folder, then delete reports/draft_q3_2024.tmp",
+    "expected_tools": [
+      {
+        "name": "move_file",
+        "input_parameters": {
+          "source": "reports/q1_2024.pdf",
+          "destination": "archive"
+        }
+      },
+      {
+        "name": "delete_file",
+        "input_parameters": {
+          "path": "reports/draft_q3_2024.tmp"
+        }
+      }
+    ],
+    "additional_metadata": {
+      "difficulty": "medium"
+    }
+  },
+  {
+    "input": "Read logs/error.log, then create logs/checked.txt with the content 'reviewed'",
+    "expected_tools": [
+      {
+        "name": "read_file",
+        "input_parameters": {
+          "path": "logs/error.log"
+        }
+      },
+      {
+        "name": "create_file",
+        "input_parameters": {
+          "path": "logs/checked.txt",
+          "content": "reviewed"
+        }
+      }
+    ],
+    "additional_metadata": {
+      "difficulty": "medium"
+    }
+  },
+  {
+    "input": "Rename notes/ideas.txt to notes/product_ideas.txt, then delete notes/meeting_jan.txt",
+    "expected_tools": [
+      {
+        "name": "move_file",
+        "input_parameters": {
+          "source": "notes/ideas.txt",
+          "destination": "notes/product_ideas.txt"
+        }
+      },
+      {
+        "name": "delete_file",
+        "input_parameters": {
+          "path": "notes/meeting_jan.txt"
+        }
+      }
+    ],
+    "additional_metadata": {
+      "difficulty": "medium"
+    }
+  },
+  {
+    "input": "Create the folder archive/invoices_2024, then move invoices/invoice_2024_01.pdf and then invoices/invoice_2024_02.pdf into it",
+    "expected_tools": [
+      {
+        "name": "create_folder",
+        "input_parameters": {
+          "path": "archive/invoices_2024"
+        }
+      },
+      {
+        "name": "move_file",
+        "input_parameters": {
+          "source": "invoices/invoice_2024_01.pdf",
+          "destination": "archive/invoices_2024"
+        }
+      },
+      {
+        "name": "move_file",
+        "input_parameters": {
+          "source": "invoices/invoice_2024_02.pdf",
+          "destination": "archive/invoices_2024"
+        }
+      }
+    ],
+    "additional_metadata": {
+      "difficulty": "difficult"
+    }
+  },
+  {
+    "input": "Create the folder archive/reports_2024, then move reports/q1_2024.pdf, then reports/q2_2024.pdf, then reports/q3_2024.pdf into it",
+    "expected_tools": [
+      {
+        "name": "create_folder",
+        "input_parameters": {
+          "path": "archive/reports_2024"
+        }
+      },
+      {
+        "name": "move_file",
+        "input_parameters": {
+          "source": "reports/q1_2024.pdf",
+          "destination": "archive/reports_2024"
+        }
+      },
+      {
+        "name": "move_file",
+        "input_parameters": {
+          "source": "reports/q2_2024.pdf",
+          "destination": "archive/reports_2024"
+        }
+      },
+      {
+        "name": "move_file",
+        "input_parameters": {
+          "source": "reports/q3_2024.pdf",
+          "destination": "archive/reports_2024"
+        }
+      }
+    ],
+    "additional_metadata": {
+      "difficulty": "difficult"
+    }
+  },
+  {
+    "input": "Read notes/meeting_feb.txt, then create notes/launch.txt with the content 'Launch: 15 March', then delete notes/meeting_feb.txt",
+    "expected_tools": [
+      {
+        "name": "read_file",
+        "input_parameters": {
+          "path": "notes/meeting_feb.txt"
+        }
+      },
+      {
+        "name": "create_file",
+        "input_parameters": {
+          "path": "notes/launch.txt",
+          "content": "Launch: 15 March"
+        }
+      },
+      {
+        "name": "delete_file",
+        "input_parameters": {
+          "path": "notes/meeting_feb.txt"
+        }
+      }
+    ],
+    "additional_metadata": {
+      "difficulty": "difficult"
+    }
+  },
+  {
+    "input": "Delete cache.tmp, then old_draft.tmp, then reports/draft_q3_2024.tmp",
+    "expected_tools": [
+      {
+        "name": "delete_file",
+        "input_parameters": {
+          "path": "cache.tmp"
+        }
+      },
+      {
+        "name": "delete_file",
+        "input_parameters": {
+          "path": "old_draft.tmp"
+        }
+      },
+      {
+        "name": "delete_file",
+        "input_parameters": {
+          "path": "reports/draft_q3_2024.tmp"
+        }
+      }
+    ],
+    "additional_metadata": {
+      "difficulty": "difficult"
+    }
+  },
+  {
+    "input": "Create the folder backup, then the folder backup/notes, then move notes/ideas.txt into backup/notes, then rename todo.txt to backup/todo_old.txt",
+    "expected_tools": [
+      {
+        "name": "create_folder",
+        "input_parameters": {
+          "path": "backup"
+        }
+      },
+      {
+        "name": "create_folder",
+        "input_parameters": {
+          "path": "backup/notes"
+        }
+      },
+      {
+        "name": "move_file",
+        "input_parameters": {
+          "source": "notes/ideas.txt",
+          "destination": "backup/notes"
+        }
+      },
+      {
+        "name": "move_file",
+        "input_parameters": {
+          "source": "todo.txt",
+          "destination": "backup/todo_old.txt"
+        }
+      }
+    ],
+    "additional_metadata": {
+      "difficulty": "difficult"
+    }
+  },
+  {
+    "input": "Move logs/old/debug.log into the logs folder, then delete the logs/old folder, then create logs/README.txt with the content 'old logs merged'",
+    "expected_tools": [
+      {
+        "name": "move_file",
+        "input_parameters": {
+          "source": "logs/old/debug.log",
+          "destination": "logs"
+        }
+      },
+      {
+        "name": "delete_folder",
+        "input_parameters": {
+          "path": "logs/old"
+        }
+      },
+      {
+        "name": "create_file",
+        "input_parameters": {
+          "path": "logs/README.txt",
+          "content": "old logs merged"
+        }
+      }
+    ],
+    "additional_metadata": {
+      "difficulty": "difficult"
+    }
+  }
+]
