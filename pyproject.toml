@@ -7,7 +7,7 @@ requires-python = ">=3.11"
 # Pinned to the versions the evals in evals/results/ were run with: a newer
 # deepeval or LangChain can change judge prompts or trace shapes, and so scores.
 dependencies = [
-    "deepeval==4.1.5",
+    "deepeval[inspect]==4.1.5",
     "langchain==1.2.0",
     "langchain-openai==1.1.5",
     "langgraph==1.0.5",
