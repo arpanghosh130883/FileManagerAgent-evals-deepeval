@@ -32,7 +32,6 @@ REPORT_DIR = PROJECT_ROOT / "evals" / "results" / "reports"
 EXTRAS = [
     ("task", "Task (as the judge understood it)"),
     ("outcome", "Outcome (as the judge summarised it)"),
-    ("extracted_plan", "Plan (as the judge extracted it)"),   # Plan Adherence
 ]
 
 
